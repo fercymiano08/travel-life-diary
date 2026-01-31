@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- FIXED: Mobile viewport with safe areas -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Travel Life Diary - Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,100..1000;1,100..1000&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #ff3b2f 0%, #ff954d 100%);
+            --border-gradient: linear-gradient(to bottom, #ff3b2f, #ff954d);
+            --bg-grey: #f5f5f5;
+            --text-main: #333;
+            --text-orange: #ff6b3d;
+            --card-shadow: 0 8px 25px rgba(255, 107, 61, 0.15);
+            --hover-shadow: 0 12px 35px rgba(255, 107, 61, 0.25);
+            --safe-top: env(safe-area-inset-top);
+            --safe-bottom: env(safe-area-inset-bottom);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'DM Sans', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: var(--primary-gradient);
+            min-height: 100vh;
+            min-height: -webkit-fill-available;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: max(20px, var(--safe-top)) max(15px, var(--safe-top)) max(20px, var(--safe-bottom));
+            touch-action: manipulation;
+            overflow-x: hidden;
+        }
+
+        /* Main Container - FIXED for mobile */
+        .dashboard-container {
+            background-color: white;
+            width: 98%;
+            max-width: 550px;
+            border-radius: 40px;
+            padding: 30px 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+            position: relative;
+            overflow: hidden;
+            margin: 10px;
+            min-height: 85vh;
+        }
+
+        /* Decorative Elements */
+        .dashboard-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 8px;
+            background: var(--primary-gradient);
+            z-index: 1;
+        }
+
+        /* Header Profile Section - FIXED touch area */
+        .header-card {
+            background: var(--primary-gradient);
+            border-radius: 25px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: white;
+            box-shadow: var(--card-shadow);
+            cursor: pointer;
+            touch-action: manipulation;
+            min-height: 110px;
+            transition: transform 0.2s ease;
+            -webkit-touch-callout: none;
+        }
+
+        .header-card:active {
+            transform: scale(0.98);
+        }
+
+        .profile-icon {
+            width: 70px;
+            height: 70px;
+            min-width: 70px;
+            min-height: 70px;
+            background: white;
+            border-radius: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .profile-icon i {
+            width: 45px;
+            height: 45px;
+            color: var(--text-orange);
+        }
+
+        .header-info {
+            flex: 1;
+        }
+
+        .header-info h2 {
+            font-size: clamp(1.2rem, 4vw, 1.5rem);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+
+        .header-info p {
+            font-size: clamp(0.85rem, 3vw, 0.95rem);
+            opacity: 0.9;
+            font-weight: 500;
+            line-height: 1.4;
+        }
+
+        /* NEW: Quick Actions Bar */
+        .quick-actions {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .action-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 12px;
+            padding: 8px 12px;
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: background 0.2s;
+            touch-action: manipulation;
+            min-height: 36px;
+        }
+
+        .action-btn i {
+            width: 16px;
+            height: 16px;
+        }
+
+        .action-btn:active {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Stats Grid - FIXED for mobile */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .stat-box {
+            background: white;
+            border-radius: 20px;
+            padding: 20px 10px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-height: 100px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 3px solid transparent;
+            box-shadow: var(--card-shadow);
+            position: relative;
+            overflow: hidden;
+            touch-action: manipulation;
+        }
+
+        .stat-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: var(--primary-gradient);
+        }
+
+        .stat-box:active {
+            transform: scale(0.98);
+            box-shadow: var(--hover-shadow);
+            border-color: var(--text-orange);
+        }
+
+        .stat-box .value {
+            font-size: clamp(1.5rem, 4vw, 1.8rem);
+            font-weight: 700;
+            color: var(--text-orange);
+            margin-bottom: 5px;
+        }
+
+        .stat-box .label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            line-height: 1.3;
+        }
+
+        /* NEW: Stats animation */
+        .stat-box .value {
+            transition: transform 0.3s ease;
+        }
+
+        .stat-box:active .value {
+            transform: scale(1.1);
+        }
+
+        /* Main Menu Cards - FIXED for mobile */
+        .menu-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .menu-card {
+            background: white;
+            border-radius: 25px;
+            padding: 25px;
+            min-height: 250px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: var(--card-shadow);
+            border: 4px solid;
+            border-image: var(--border-gradient) 1;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-icon {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 20px;
+            color: var(--text-orange);
+            background: linear-gradient(135deg, #ffe8e0 0%, #ffd1c1 100%);
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px;
+        }
+
+        .menu-card h3 {
+            color: var(--text-orange);
+            font-size: clamp(1.1rem, 3.5vw, 1.3rem);
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+
+        .menu-list {
+            list-style: none;
+            width: 100%;
+        }
+
+        .menu-list li {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #555;
+            padding: 14px 15px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 2px solid transparent;
+            touch-action: manipulation;
+            min-height: 54px;
+        }
+
+        .menu-list li:active {
+            background: linear-gradient(135deg, #fff5f2 0%, #ffe8e0 100%);
+            border-color: #ffd1c1;
+            color: var(--text-orange);
+            transform: translateX(5px);
+        }
+
+        .menu-list li i {
+            width: 20px;
+            height: 20px;
+            min-width: 20px;
+        }
+
+        /* NEW: Menu item notification badges */
+        .menu-list li .badge {
+            margin-left: auto;
+            background: var(--text-orange);
+            color: white;
+            font-size: 0.7rem;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-weight: 700;
+        }
+
+        /* Bottom Navbar - FIXED for mobile */
+        .bottom-nav {
+            background: white;
+            border-radius: 30px;
+            padding: 12px 15px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            box-shadow: var(--card-shadow);
+            margin-top: 10px;
+            position: sticky;
+            bottom: 10px;
+            z-index: 10;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #666;
+            text-decoration: none;
+            gap: 4px;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 20px;
+            transition: all 0.2s ease;
+            min-width: 60px;
+            min-height: 60px;
+            justify-content: center;
+            touch-action: manipulation;
+            -webkit-touch-callout: none;
+        }
+
+        .nav-item:active {
+            color: var(--text-orange);
+            background: #fff5f2;
+            transform: translateY(-2px);
+        }
+
+        .nav-item.active {
+            color: white;
+            background: var(--primary-gradient);
+            box-shadow: 0 5px 15px rgba(255, 107, 61, 0.3);
+        }
+
+        .nav-item i {
+            width: 22px;
+            height: 22px;
+        }
+
+        .nav-item span {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        /* NEW: Nav notification dot */
+        .nav-notification {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 8px;
+            height: 8px;
+            background: #ff3b2f;
+            border-radius: 50%;
+            border: 2px solid white;
+        }
+
+        /* Popup Modal - FIXED for mobile */
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+            padding: var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left);
+            backdrop-filter: blur(5px);
+        }
+
+        .popup-modal {
+            background: white;
+            border-radius: 30px;
+            padding: 25px;
+            max-width: 400px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            animation: slideUp 0.3s ease;
+            border: 5px solid;
+            border-image: var(--primary-gradient) 1;
+            margin: 20px;
+        }
+
+        .popup-header {
+            color: var(--text-orange);
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .popup-content {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 25px;
+            white-space: pre-line;
+            font-size: 0.95rem;
+        }
+
+        .popup-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+        }
+
+        .popup-btn {
+            padding: 14px 25px;
+            border-radius: 25px;
+            border: none;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            min-height: 50px;
+            touch-action: manipulation;
+        }
+
+        .popup-btn-primary {
+            background: var(--primary-gradient);
+            color: white;
+        }
+
+        .popup-btn-secondary {
+            background: #f5f5f5;
+            color: #666;
+        }
+
+        .popup-btn:active {
+            transform: scale(0.98);
+            box-shadow: 0 5px 15px rgba(255, 107, 61, 0.3);
+        }
+
+        /* NEW: Loading animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 107, 61, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--text-orange);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* NEW: Pull to refresh indicator */
+        .refresh-indicator {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            right: 0;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--text-orange);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        /* Responsive */
+        @media (min-width: 480px) {
+            .stats-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+            
+            .menu-card {
+                min-height: 280px;
+                padding: 30px;
+            }
+        }
+
+        /* NEW: Dark mode support */
+        @media (prefers-color-scheme: dark) {
+            .dashboard-container,
+            .menu-card,
+            .stat-box {
+                background: #1a1a1a;
+                color: #fff;
+            }
+            
+            .menu-card,
+            .stat-box {
+                border-color: #333;
+            }
+            
+            .menu-list li {
+                color: #ccc;
+            }
+            
+            .popup-modal {
+                background: #1a1a1a;
+                color: #fff;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Popup Modal -->
+    <div class="popup-overlay" id="popupOverlay">
+        <div class="popup-modal" id="popupModal">
+            <div class="popup-header" id="popupHeader">
+                <i data-lucide="info" id="popupIcon"></i>
+                <span id="popupTitle">Feature Information</span>
+            </div>
+            <div class="popup-content" id="popupMessage">
+                This feature is currently in development.
+            </div>
+            <div class="popup-buttons">
+                <button class="popup-btn popup-btn-primary" onclick="closePopup()">Got it!</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Dashboard -->
+    <div class="dashboard-container" id="dashboardContainer">
+        <!-- Pull to refresh indicator -->
+        <div class="refresh-indicator" id="refreshIndicator">
+            <i data-lucide="refresh-cw" class="loading"></i>
+        </div>
+
+        <!-- Header Profile Section -->
+        <div class="header-card" onclick="showProfilePopup()">
+            <div class="profile-icon">
+                <i data-lucide="user-circle"></i>
+            </div>
+            <div class="header-info">
+                <h2 id="userName">TRAVEL LIFE DIARY</h2>
+                <p>Welcome, <span id="displayName">Traveler</span>!</p>
+                <p style="font-size: 0.8rem; margin-top: 5px;">Tap to edit profile</p>
+                
+                <!-- NEW: Quick Actions -->
+                <div class="quick-actions">
+                    <button class="action-btn" onclick="showAddTripPopup()">
+                        <i data-lucide="plus-circle"></i>
+                        <span>New Trip</span>
+                    </button>
+                    <button class="action-btn" onclick="showAddEntryPopup()">
+                        <i data-lucide="edit-3"></i>
+                        <span>New Entry</span>
+                    </button>
+                    <button class="action-btn" onclick="showDiscoverPopup()">
+                        <i data-lucide="compass"></i>
+                        <span>Discover</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <div class="stat-box" onclick="goToTrips()">
+                <div class="value" id="totalTrips">0</div>
+                <div class="label">My Trips</div>
+            </div>
+            <div class="stat-box" onclick="showJournalPopup()">
+                <div class="value" id="journalEntries">0</div>
+                <div class="label">Journal<br>Entries</div>
+            </div>
+            <div class="stat-box" onclick="showCommunityPopup()">
+                <div class="value" id="followers">0</div>
+                <div class="label">Community<br>Friends</div>
+            </div>
+            <div class="stat-box" onclick="showBucketListPopup()">
+                <div class="value" id="bucketList">0</div>
+                <div class="label">Bucket List</div>
+            </div>
+        </div>
+
+        <!-- Main Menu Cards -->
+        <div class="menu-grid">
+            <!-- PERSONAL TRAVEL DIARY -->
+            <div class="menu-card">
+                <div class="card-icon">
+                    <i data-lucide="book-heart"></i>
+                </div>
+                <h3>My Travel Diary</h3>
+                <ul class="menu-list">
+                    <li onclick="goToTrips()">
+                        <i data-lucide="plane"></i>
+                        <span>My Trips & Journeys</span>
+                        <span class="badge" id="tripsBadge">0</span>
+                    </li>
+                    <li onclick="showJournalPopup()">
+                        <i data-lucide="book-open"></i>
+                        <span>Travel Diary Journal</span>
+                        <span class="badge" id="journalBadge">0</span>
+                    </li>
+                    <li onclick="showBucketListPopup()">
+                        <i data-lucide="notebook-pen"></i>
+                        <span>Travel Bucket List</span>
+                        <span class="badge" id="bucketBadge">0</span>
+                    </li>
+                    <li onclick="showStatisticsPopup()">
+                        <i data-lucide="bar-chart-3"></i>
+                        <span>Travel Statistics</span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- TRAVEL COMMUNITY -->
+            <div class="menu-card">
+                <div class="card-icon">
+                    <i data-lucide="users"></i>
+                </div>
+                <h3>Travel Community</h3>
+                <ul class="menu-list">
+                    <li onclick="showCommunityPopup()">
+                        <i data-lucide="newspaper"></i>
+                        <span>Community Feed</span>
+                        <span class="badge" id="feedBadge">3</span>
+                    </li>
+                    <li onclick="showDiscoverPopup()">
+                        <i data-lucide="compass"></i>
+                        <span>Discover Trips</span>
+                    </li>
+                    <li onclick="showFriendsPopup()">
+                        <i data-lucide="user-plus"></i>
+                        <span>Find Friends</span>
+                    </li>
+                    <li onclick="showMessagesPopup()">
+                        <i data-lucide="message-circle"></i>
+                        <span>Messages</span>
+                        <span class="badge" id="messagesBadge">5</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <div class="nav-item active" onclick="goToDashboard()">
+                <i data-lucide="layout-grid"></i>
+                <span>Home</span>
+            </div>
+            <div class="nav-item" onclick="goToTrips()">
+                <i data-lucide="plane"></i>
+                <span>Trips</span>
+                <div class="nav-notification" id="tripsNotification" style="display: none;"></div>
+            </div>
+            <div class="nav-item" onclick="showJournalPopup()">
+                <i data-lucide="book-open"></i>
+                <span>Journal</span>
+            </div>
+            <div class="nav-item" onclick="showCommunityPopup()">
+                <i data-lucide="users"></i>
+                <span>Community</span>
+                <div class="nav-notification" id="communityNotification" style="display: none;"></div>
+            </div>
+            <div class="nav-item" onclick="showProfilePopup()">
+                <i data-lucide="settings"></i>
+                <span>Settings</span>
+            </div>
+        </nav>
+    </div>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+        
+        // Prevent iOS zoom
+        document.addEventListener('touchstart', function() {}, {passive: true});
+
+        // State management
+        let userData = {
+            name: "Traveler",
+            stats: {
+                trips: 0,
+                journalEntries: 0,
+                followers: 0,
+                bucketList: 0
+            }
+        };
+
+        // NEW: Pull to refresh
+        let startY = 0;
+        let pullDelta = 0;
+        
+        document.getElementById('dashboardContainer').addEventListener('touchstart', function(e) {
+            startY = e.touches[0].clientY;
+            pullDelta = 0;
+        });
+        
+        document.getElementById('dashboardContainer').addEventListener('touchmove', function(e) {
+            const currentY = e.touches[0].clientY;
+            pullDelta = currentY - startY;
+            
+            if (window.scrollY === 0 && pullDelta > 0) {
+                e.preventDefault();
+                const indicator = document.getElementById('refreshIndicator');
+                indicator.style.opacity = Math.min(pullDelta / 100, 1);
+                
+                if (pullDelta > 150) {
+                    indicator.querySelector('i').style.animationPlayState = 'running';
+                }
+            }
+        });
+        
+        document.getElementById('dashboardContainer').addEventListener('touchend', function() {
+            const indicator = document.getElementById('refreshIndicator');
+            if (pullDelta > 150) {
+                refreshDashboard();
+            }
+            indicator.style.opacity = 0;
+            indicator.querySelector('i').style.animationPlayState = 'paused';
+        });
+
+        // NEW: Refresh function
+        function refreshDashboard() {
+            // Show loading on stats
+            document.querySelectorAll('.stat-box .value').forEach(el => {
+                const original = el.textContent;
+                el.textContent = '...';
+                setTimeout(() => el.textContent = original, 800);
+            });
+            
+            // Simulate data refresh
+            setTimeout(() => {
+                loadStats();
+                updateBadges();
+                showToast('Dashboard updated!');
+            }, 1000);
+        }
+
+        // NEW: Toast notification
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.textContent = message;
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: var(--text-orange);
+                color: white;
+                padding: 12px 24px;
+                border-radius: 25px;
+                box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+                z-index: 1001;
+                animation: slideDown 0.3s ease;
+            `;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.animation = 'slideUp 0.3s ease';
+                setTimeout(() => toast.remove(), 300);
+            }, 2000);
+        }
+
+        // Popup functions
+        function showPopup(title, message, icon = 'info') {
+            document.getElementById('popupTitle').textContent = title;
+            document.getElementById('popupMessage').textContent = message;
+            
+            // Set icon
+            const iconElement = document.getElementById('popupIcon');
+            iconElement.setAttribute('data-lucide', icon);
+            lucide.createIcons();
+            
+            // Show popup
+            document.getElementById('popupOverlay').style.display = 'flex';
+            
+            // Hide keyboard if open
+            if (document.activeElement) {
+                document.activeElement.blur();
+            }
+        }
+
+        function closePopup() {
+            document.getElementById('popupOverlay').style.display = 'none';
+        }
+
+        // Close popup when clicking outside
+        document.getElementById('popupOverlay').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closePopup();
+            }
+        });
+
+        // NEW: Additional popup functions
+        function showAddTripPopup() {
+            showPopup(
+                'Start New Trip', 
+                'Create a new travel adventure:\n\n• Name your trip\n• Set destination\n• Choose travel dates\n• Add travel companions\n• Set trip privacy\n\nYour journey begins here!',
+                'map-pin-plus'
+            );
+        }
+
+        function showAddEntryPopup() {
+            showPopup(
+                'New Journal Entry', 
+                'Record today\'s travel memories:\n\n• Write about your day\n• Add photos and videos\n• Rate your experience\n• Tag locations visited\n• Note weather and mood\n\nCapture the moment!',
+                'edit-3'
+            );
+        }
+
+        // Feature popups
+        function showProfilePopup() {
+            showPopup(
+                'Profile Management', 
+                'Your profile page will allow you to:\n\n• Update your display name\n• Change profile picture\n• Update email and password\n• Set privacy preferences\n• View your travel stats\n\nThis feature is coming soon!',
+                'user-circle'
+            );
+        }
+
+        function showJournalPopup() {
+            showPopup(
+                'Daily Travel Journal', 
+                'The Travel Journal will let you:\n\n• Write daily entries during trips\n• Track your mood and weather\n• Add photos to entries\n• Review past reflections\n• Keep private travel memories\n\nReady to start journaling? We\'re building this now!',
+                'book-open'
+            );
+        }
+
+        function showBucketListPopup() {
+            showPopup(
+                'Travel Bucket List', 
+                'Your Travel Bucket List will include:\n\n• Dream destinations to visit\n• Experiences to try\n• Restaurants to eat at\n• Activities to complete\n• Timeline for goals\n\nStart planning your dream adventures!',
+                'notebook-pen'
+            );
+        }
+
+        function showStatisticsPopup() {
+            showPopup(
+                'Travel Statistics', 
+                'Travel Statistics will show:\n\n• Countries visited map\n• Trip duration charts\n• Budget spending analysis\n• Seasonal travel patterns\n• Personal travel insights\n\nVisualize your travel journey!',
+                'bar-chart-3'
+            );
+        }
+
+        function showCommunityPopup() {
+            showPopup(
+                'Travel Community', 
+                'Connect with fellow travelers:\n\n• Share your trip experiences\n• Discover new destinations\n• Get travel tips and advice\n• Make travel friends\n• Join travel discussions\n\nBuilding our travel community!',
+                'users'
+            );
+        }
+
+        function showDiscoverPopup() {
+            showPopup(
+                'Discover Trips', 
+                'Explore amazing trips from the community:\n\n• Browse popular destinations\n• Filter by trip type\n• Get inspiration for your next adventure\n• Save trips to your bucket list\n• Learn from others\' experiences',
+                'compass'
+            );
+        }
+
+        function showFriendsPopup() {
+            showPopup(
+                'Find Friends', 
+                'Connect with travel buddies:\n\n• Search for fellow travelers\n• Follow friends\' journeys\n• Share travel plans\n• Coordinate trips together\n• Build your travel network',
+                'user-plus'
+            );
+        }
+
+        function showMessagesPopup() {
+            showPopup(
+                'Messages', 
+                'Chat with the travel community:\n\n• Private messaging with friends\n• Group chats for trip planning\n• Share photos and tips\n• Coordinate meetups\n• Travel advice discussions',
+                'message-circle'
+            );
+        }
+
+        // Load stats from localStorage with fallbacks
+        function loadStats() {
+            try {
+                // Load user data
+                const savedUser = localStorage.getItem('travelUser');
+                if (savedUser) {
+                    userData = JSON.parse(savedUser);
+                    document.getElementById('displayName').textContent = userData.name || 'Traveler';
+                }
+
+                // Load trips count
+                const trips = JSON.parse(localStorage.getItem('travelTrips') || '[]');
+                const tripsCount = trips.length;
+                document.getElementById('totalTrips').textContent = tripsCount;
+                document.getElementById('tripsBadge').textContent = tripsCount;
+                userData.stats.trips = tripsCount;
+
+                // Load journal entries count
+                const journalEntries = JSON.parse(localStorage.getItem('journalEntries') || '[]');
+                const journalCount = journalEntries.length;
+                document.getElementById('journalEntries').textContent = journalCount;
+                document.getElementById('journalBadge').textContent = journalCount;
+                userData.stats.journalEntries = journalCount;
+
+                // Load bucket list count
+                const bucketList = JSON.parse(localStorage.getItem('bucketList') || '[]');
+                const bucketCount = bucketList.length;
+                document.getElementById('bucketList').textContent = bucketCount;
+                document.getElementById('bucketBadge').textContent = bucketCount;
+                userData.stats.bucketList = bucketCount;
+
+                // Followers (simulated)
+                const followers = Math.floor(Math.random() * 20) + 5;
+                document.getElementById('followers').textContent = followers;
+                userData.stats.followers = followers;
+
+                // Update notifications
+                updateNotifications();
+
+                // Save updated user data
+                localStorage.setItem('travelUser', JSON.stringify(userData));
+
+            } catch (error) {
+                console.error('Error loading stats:', error);
+                // Set defaults
+                document.getElementById('totalTrips').textContent = '0';
+                document.getElementById('journalEntries').textContent = '0';
+                document.getElementById('followers').textContent = '12';
+                document.getElementById('bucketList').textContent = '0';
+            }
+        }
+
+        // NEW: Update notification badges
+        function updateBadges() {
+            // Simulate new content
+            const newTrips = Math.floor(Math.random() * 3);
+            const newMessages = Math.floor(Math.random() * 5);
+            
+            if (newTrips > 0) {
+                document.getElementById('tripsNotification').style.display = 'block';
+            }
+            
+            if (newMessages > 0) {
+                document.getElementById('feedBadge').textContent = newTrips;
+                document.getElementById('messagesBadge').textContent = newMessages;
+                document.getElementById('communityNotification').style.display = 'block';
+            }
+        }
+
+        // NEW: Update notifications
+        function updateNotifications() {
+            // Check for new trips
+            const lastVisit = localStorage.getItem('lastVisit');
+            const now = new Date().toISOString();
+            
+            if (!lastVisit) {
+                document.getElementById('tripsNotification').style.display = 'block';
+                document.getElementById('communityNotification').style.display = 'block';
+            }
+            
+            localStorage.setItem('lastVisit', now);
+        }
+
+        // Load stats on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadStats();
+            updateBadges();
+            
+            // Add touch feedback to all interactive elements
+            document.querySelectorAll('.menu-list li, .stat-box, .nav-item, .action-btn').forEach(el => {
+                el.addEventListener('touchstart', function() {
+                    this.style.opacity = '0.7';
+                });
+                
+                el.addEventListener('touchend', function() {
+                    this.style.opacity = '1';
+                });
+            });
+        });
+
+        // Navigation functions
+        function goToDashboard() {
+            setActiveNav('home');
+            window.scrollTo(0, 0);
+        }
+
+        function goToTrips() {
+            setActiveNav('trips');
+            showPopup(
+                'My Trips',
+                'View and manage your travel journeys:\n\n• Upcoming trips\n• Past adventures\n• Trip details and photos\n• Travel companions\n• Itinerary planning\n\nFeature coming soon!',
+                'plane'
+            );
+        }
+
+        // Set active navigation item
+        function setActiveNav(activeItem) {
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Find and activate the clicked item
+            const items = document.querySelectorAll('.nav-item');
+            items.forEach(item => {
+                const span = item.querySelector('span');
+                if (span && span.textContent.toLowerCase().includes(activeItem)) {
+                    item.classList.add('active');
+                    
+                    // Add click animation
+                    item.style.transform = 'scale(0.95)';
+                    setTimeout(() => item.style.transform = 'scale(1)', 150);
+                }
+            });
+        }
+
+        // Close popup with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closePopup();
+            }
+        });
+
+        // NEW: Handle back button on mobile
+        let backButtonPressed = false;
+        window.addEventListener('popstate', function() {
+            if (!backButtonPressed) {
+                backButtonPressed = true;
+                showToast('Press back again to exit');
+                setTimeout(() => backButtonPressed = false, 2000);
+                history.pushState(null, null, window.location.pathname);
+            }
+        });
+        history.pushState(null, null, window.location.pathname);
+
+        // NEW: Vibration feedback for mobile
+        function vibrate() {
+            if (navigator.vibrate) {
+                navigator.vibrate(50);
+            }
+        }
+
+        // Add vibration to important interactions
+        document.querySelectorAll('.stat-box, .menu-list li, .nav-item').forEach(el => {
+            el.addEventListener('click', vibrate);
+        });
+    </script>
+</body>
+</html>

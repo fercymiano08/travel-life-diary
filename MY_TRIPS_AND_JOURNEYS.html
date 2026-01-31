@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Trips - Travel Life Diary</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,100..1000;1,100..1000&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #ff3b2f 0%, #ff954d 100%);
+            --text-orange: #ff6b3d;
+            --input-bg: #e0e0e0;
+            --dark-orange: #e55a35;
+            --green: #4CAF50;
+            --blue: #2196F3;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        body {
+            background: var(--primary-gradient);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .dashboard-container {
+            background-color: white;
+            width: 100%;
+            max-width: 650px;
+            border-radius: 40px;
+            padding: 30px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Header Section */
+        .header-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .title-area h1 {
+            color: var(--text-orange);
+            font-size: 24px;
+            text-transform: uppercase;
+        }
+
+        .title-area p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .top-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        /* Pressure Plate Button Style */
+        .btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            text-transform: uppercase;
+            background: var(--primary-gradient);
+            transition: transform 0.1s ease, box-shadow 0.1s ease;
+            box-shadow: 0 4px 0 rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn:active {
+            transform: translateY(3px);
+            box-shadow: 0 1px 0 rgba(0,0,0,0.1);
+        }
+
+        /* Stats Grid - IMPROVED: Clickable stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+
+        .stat-box {
+            background: var(--primary-gradient);
+            border-radius: 4px;
+            padding: 15px 5px;
+            text-align: center;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-height: 100px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .stat-box:hover {
+            background: var(--dark-orange);
+            transform: translateY(-2px);
+        }
+
+        .stat-box span { 
+            font-size: 12px; 
+            margin-bottom: 5px; 
+            font-weight: 600;
+        }
+        .stat-box strong { 
+            font-size: 24px; 
+            font-weight: 700;
+        }
+
+        /* Module Sections (Drafts & Trip List) */
+        .module-section {
+            border: 5px solid;
+            border-image: var(--primary-gradient) 1;
+            padding: 20px;
+            border-radius: 2px;
+            min-height: 150px;
+            position: relative;
+        }
+
+        .module-title {
+            color: var(--text-orange);
+            font-size: 18px;
+            text-transform: uppercase;
+            font-weight: 700;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Drafts Content - IMPROVED with examples */
+        .drafts-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .draft-item {
+            background: #f9f9f9;
+            border: 2px dashed var(--text-orange);
+            border-radius: 4px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .draft-item:hover {
+            background: #fff5f2;
+            transform: translateY(-2px);
+        }
+
+        .draft-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .draft-title {
+            font-weight: 700;
+            color: var(--text-orange);
+            font-size: 14px;
+        }
+
+        .draft-progress {
+            font-size: 11px;
+            color: #666;
+            background: #eee;
+            padding: 2px 8px;
+            border-radius: 10px;
+        }
+
+        .draft-destination {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .draft-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .draft-btn {
+            flex: 1;
+            padding: 6px;
+            border: none;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+
+        .draft-btn.continue {
+            background: var(--primary-gradient);
+            color: white;
+        }
+
+        .draft-btn.delete {
+            background: #eee;
+            color: #666;
+        }
+
+        .open-drafts-btn {
+            width: 100%;
+            padding: 10px;
+            background: #f9f9f9;
+            border: 2px solid var(--text-orange);
+            border-radius: 4px;
+            color: var(--text-orange);
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .open-drafts-btn:hover {
+            background: var(--primary-gradient);
+            color: white;
+        }
+
+        /* Search & Filter Bar */
+        .search-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .search-container label {
+            color: #333;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .search-bar {
+            flex-grow: 1;
+            background: var(--input-bg);
+            border: none;
+            padding: 8px 15px;
+            border-radius: 2px;
+            font-size: 14px;
+            outline: none;
+            transition: background 0.2s;
+        }
+
+        .search-bar:focus {
+            background: #f0f0f0;
+        }
+
+        .filter-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .filter-btn {
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .filter-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .filter-btn:active { 
+            transform: scale(0.95); 
+        }
+
+        .filter-btn.active {
+            background: var(--dark-orange);
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        /* Trip Card */
+        .trip-card {
+            background: var(--primary-gradient);
+            border-radius: 4px;
+            padding: 20px;
+            display: flex;
+            gap: 20px;
+            color: white;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 15px;
+        }
+
+        .trip-card:hover {
+            background: var(--dark-orange);
+        }
+
+        .trip-card:active { 
+            transform: scale(0.98); 
+        }
+
+        .trip-img {
+            width: 140px;
+            height: 110px;
+            background: #fff;
+            border-radius: 2px;
+            overflow: hidden;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .trip-details {
+            font-size: 11px;
+            line-height: 1.5;
+            flex-grow: 1;
+        }
+
+        .trip-details p { 
+            margin-bottom: 2px; 
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .trip-details i {
+            width: 12px;
+            height: 12px;
+        }
+
+        .trip-footer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            font-size: 10px;
+            font-weight: 500;
+        }
+
+        /* Favorite Heart */
+        .favorite-btn {
+            position: absolute;
+            top: 15px;
+            right: 50px;
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            padding: 5px;
+            z-index: 5;
+        }
+
+        .favorite-btn.active i {
+            fill: #ff3b2f;
+            color: #ff3b2f;
+        }
+
+        /* Status Badge */
+        .status-badge {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: white;
+            padding: 4px 8px;
+            border-radius: 2px;
+            font-size: 9px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .status-upcoming {
+            background: var(--green);
+            color: white;
+        }
+
+        .status-ongoing {
+            background: var(--blue);
+            color: white;
+        }
+
+        .status-completed {
+            background: #666;
+            color: white;
+        }
+
+        .settings-icon {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.2);
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+
+        .settings-icon:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Pop-out Menu */
+        .settings-menu {
+            position: absolute;
+            top: 40px;
+            right: 15px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            display: none;
+            z-index: 10;
+            overflow: hidden;
+            min-width: 120px;
+            border: 1px solid #eee;
+        }
+
+        .settings-menu.active { 
+            display: block; 
+        }
+
+        .settings-menu button {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            padding: 10px 15px;
+            border: none;
+            background: white;
+            color: var(--text-orange);
+            font-weight: 700;
+            font-size: 12px;
+            cursor: pointer;
+            text-align: left;
+            transition: background 0.2s;
+            border-bottom: 1px solid #f5f5f5;
+        }
+
+        .settings-menu button:last-child {
+            border-bottom: none;
+        }
+
+        .settings-menu button:hover { 
+            background: #f5f5f5; 
+        }
+
+        /* Trip Count */
+        .trip-count {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: var(--text-orange);
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 30px 20px;
+            color: #999;
+            font-style: italic;
+        }
+
+        .empty-state i {
+            font-size: 40px;
+            margin-bottom: 10px;
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body>
+
+<div class="dashboard-container">
+    <div class="header-section">
+        <div class="title-area">
+            <h1>My Trips</h1>
+            <p>Manage all your trips and memories</p>
+        </div>
+        <div class="top-buttons">
+            <button class="btn" onclick="goBack()">
+                <i data-lucide="arrow-left"></i> Back
+            </button>
+            <button class="btn" onclick="addNewTrip()">
+                <i data-lucide="plus"></i> Add Trip
+            </button>
+        </div>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-box" onclick="filterTrips('all')">
+            <span>Total Trips</span>
+            <strong id="totalTrips">3</strong>
+        </div>
+        <div class="stat-box" onclick="filterTrips('upcoming')">
+            <span>Upcoming</span>
+            <strong id="upcomingTrips">2</strong>
+        </div>
+        <div class="stat-box" onclick="filterTrips('ongoing')">
+            <span>Ongoing</span>
+            <strong id="ongoingTrips">0</strong>
+        </div>
+        <div class="stat-box" onclick="filterTrips('completed')">
+            <span>Completed</span>
+            <strong id="completedTrips">1</strong>
+        </div>
+    </div>
+
+    <!-- DRAFTS SECTION WITH 2 EXAMPLES -->
+    <div class="module-section">
+        <h2 class="module-title">
+            <i data-lucide="file-edit"></i> Drafts (2)
+        </h2>
+        <div class="trip-count">2 drafts</div>
+        
+        <div class="drafts-content">
+            <!-- DRAFT 1 -->
+            <div class="draft-item" onclick="continueDraft(101)">
+                <div class="draft-header">
+                    <div class="draft-title">Palawan Island Hopping</div>
+                    <div class="draft-progress">65%</div>
+                </div>
+                <div class="draft-destination">
+                    <i data-lucide="map-pin" width="10"></i> El Nido, Palawan
+                </div>
+                <p style="font-size: 11px; color: #666;">Planning island hopping adventure...</p>
+                <div class="draft-actions">
+                    <button class="draft-btn continue" onclick="event.stopPropagation(); continueDraft(101)">Continue</button>
+                    <button class="draft-btn delete" onclick="event.stopPropagation(); deleteDraft(101)">Delete</button>
+                </div>
+            </div>
+
+            <!-- DRAFT 2 -->
+            <div class="draft-item" onclick="continueDraft(102)">
+                <div class="draft-header">
+                    <div class="draft-title">Cebu Food Trip</div>
+                    <div class="draft-progress">40%</div>
+                </div>
+                <div class="draft-destination">
+                    <i data-lucide="map-pin" width="10"></i> Cebu City
+                </div>
+                <p style="font-size: 11px; color: #666;">Trying famous Cebuano dishes...</p>
+                <div class="draft-actions">
+                    <button class="draft-btn continue" onclick="event.stopPropagation(); continueDraft(102)">Continue</button>
+                    <button class="draft-btn delete" onclick="event.stopPropagation(); deleteDraft(102)">Delete</button>
+                </div>
+            </div>
+        </div>
+
+        <button class="open-drafts-btn" onclick="openDraftsPage()">
+            <i data-lucide="folder-open"></i> Open All Drafts
+        </button>
+    </div>
+
+    <!-- TRIP LIST SECTION WITH 3 EXAMPLES -->
+    <div class="module-section">
+        <h2 class="module-title">Trip List</h2>
+        <div class="trip-count">Showing 3 trips</div>
+        
+        <div class="search-container">
+            <label>SEARCH:</label>
+            <input type="text" class="search-bar" id="searchInput" placeholder="Search trips..." oninput="searchTrips()">
+        </div>
+
+        <div class="filter-buttons" id="filterButtons">
+            <button class="filter-btn active" onclick="filterTrips('all')">All</button>
+            <button class="filter-btn" onclick="filterTrips('favorites')">Favorites</button>
+            <button class="filter-btn" onclick="filterTrips('luzon')">Luzon</button>
+            <button class="filter-btn" onclick="filterTrips('visayas')">Visayas</button>
+            <button class="filter-btn" onclick="filterTrips('mindanao')">Mindanao</button>
+        </div>
+
+        <div id="tripsContainer">
+            <!-- TRIP 1: Boracay -->
+            <div class="trip-card" onclick="viewTrip(1)">
+                <div class="status-badge status-upcoming">UPCOMING</div>
+                
+                <button class="favorite-btn active" onclick="event.stopPropagation(); toggleFavorite(1)">
+                    <i data-lucide="heart"></i>
+                </button>
+                
+                <div class="trip-img">
+                    <i data-lucide="sun" style="color: var(--text-orange);" width="50"></i>
+                </div>
+                <div class="trip-details">
+                    <p><i data-lucide="map-pin" width="10"></i> <strong>Trip Name:</strong> Vacation In Boracay</p>
+                    <p><i data-lucide="navigation" width="10"></i> <strong>Destination:</strong> Boracay, Aklan</p>
+                    <p><i data-lucide="globe" width="10"></i> <strong>Region:</strong> Visayas</p>
+                    <p><i data-lucide="tag" width="10"></i> <strong>Trip Type:</strong> Beach Holiday</p>
+                    <p><i data-lucide="wallet" width="10"></i> <strong>Budget:</strong> ₱ 20,000.00</p>
+                    <p><i data-lucide="users" width="10"></i> <strong>Travelers:</strong> 2 people</p>
+                    <p><i data-lucide="message-square" width="10"></i> <strong>Description:</strong> White sand beach vacation with water activities</p>
+                    
+                    <div class="trip-footer">
+                        <span><i data-lucide="calendar" width="8"></i> Start: Mar 15, 2024</span>
+                        <span><i data-lucide="calendar" width="8"></i> End: Mar 20, 2024</span>
+                    </div>
+                </div>
+
+                <div class="settings-icon" onclick="event.stopPropagation(); toggleMenu(1)">
+                    <i data-lucide="settings" color="white"></i>
+                </div>
+                
+                <div class="settings-menu" id="menu-1">
+                    <button onclick="event.stopPropagation(); editTrip(1)">
+                        <i data-lucide="edit" width="12"></i> EDIT
+                    </button>
+                    <button onclick="event.stopPropagation(); deleteTrip(1)">
+                        <i data-lucide="trash-2" width="12"></i> DELETE
+                    </button>
+                </div>
+            </div>
+
+            <!-- TRIP 2: Tokyo -->
+            <div class="trip-card" onclick="viewTrip(2)">
+                <div class="status-badge status-completed">COMPLETED</div>
+                
+                <button class="favorite-btn active" onclick="event.stopPropagation(); toggleFavorite(2)">
+                    <i data-lucide="heart"></i>
+                </button>
+                
+                <div class="trip-img">
+                    <i data-lucide="building" style="color: var(--text-orange);" width="50"></i>
+                </div>
+                <div class="trip-details">
+                    <p><i data-lucide="map-pin" width="10"></i> <strong>Trip Name:</strong> Tokyo City Adventure</p>
+                    <p><i data-lucide="navigation" width="10"></i> <strong>Destination:</strong> Tokyo, Japan</p>
+                    <p><i data-lucide="globe" width="10"></i> <strong>Region:</strong> International</p>
+                    <p><i data-lucide="tag" width="10"></i> <strong>Trip Type:</strong> City Exploration</p>
+                    <p><i data-lucide="wallet" width="10"></i> <strong>Budget:</strong> ₱ 50,000.00</p>
+                    <p><i data-lucide="users" width="10"></i> <strong>Travelers:</strong> Solo traveler</p>
+                    <p><i data-lucide="message-square" width="10"></i> <strong>Description:</strong> Japanese culture, food, and temple visits</p>
+                    
+                    <div class="trip-footer">
+                        <span><i data-lucide="calendar" width="8"></i> Start: Feb 10, 2024</span>
+                        <span><i data-lucide="calendar" width="8"></i> End: Feb 17, 2024</span>
+                    </div>
+                </div>
+
+                <div class="settings-icon" onclick="event.stopPropagation(); toggleMenu(2)">
+                    <i data-lucide="settings" color="white"></i>
+                </div>
+                
+                <div class="settings-menu" id="menu-2">
+                    <button onclick="event.stopPropagation(); editTrip(2)">
+                        <i data-lucide="edit" width="12"></i> EDIT
+                    </button>
+                    <button onclick="event.stopPropagation(); deleteTrip(2)">
+                        <i data-lucide="trash-2" width="12"></i> DELETE
+                    </button>
+                </div>
+            </div>
+
+            <!-- TRIP 3: Baguio -->
+            <div class="trip-card" onclick="viewTrip(3)">
+                <div class="status-badge status-upcoming">UPCOMING</div>
+                
+                <button class="favorite-btn" onclick="event.stopPropagation(); toggleFavorite(3)">
+                    <i data-lucide="heart"></i>
+                </button>
+                
+                <div class="trip-img">
+                    <i data-lucide="mountain" style="color: var(--text-orange);" width="50"></i>
+                </div>
+                <div class="trip-details">
+                    <p><i data-lucide="map-pin" width="10"></i> <strong>Trip Name:</strong> Baguio Family Getaway</p>
+                    <p><i data-lucide="navigation" width="10"></i> <strong>Destination:</strong> Baguio City, Benguet</p>
+                    <p><i data-lucide="globe" width="10"></i> <strong>Region:</strong> Luzon</p>
+                    <p><i data-lucide="tag" width="10"></i> <strong>Trip Type:</strong> Mountain Vacation</p>
+                    <p><i data-lucide="wallet" width="10"></i> <strong>Budget:</strong> ₱ 15,000.00</p>
+                    <p><i data-lucide="users" width="10"></i> <strong>Travelers:</strong> 4 family members</p>
+                    <p><i data-lucide="message-square" width="10"></i> <strong>Description:</strong> Cool weather escape with strawberries and parks</p>
+                    
+                    <div class="trip-footer">
+                        <span><i data-lucide="calendar" width="8"></i> Start: Apr 05, 2024</span>
+                        <span><i data-lucide="calendar" width="8"></i> End: Apr 07, 2024</span>
+                    </div>
+                </div>
+
+                <div class="settings-icon" onclick="event.stopPropagation(); toggleMenu(3)">
+                    <i data-lucide="settings" color="white"></i>
+                </div>
+                
+                <div class="settings-menu" id="menu-3">
+                    <button onclick="event.stopPropagation(); editTrip(3)">
+                        <i data-lucide="edit" width="12"></i> EDIT
+                    </button>
+                    <button onclick="event.stopPropagation(); deleteTrip(3)">
+                        <i data-lucide="trash-2" width="12"></i> DELETE
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    lucide.createIcons();
+    
+    // Sample data
+    let trips = [
+        {
+            id: 1,
+            name: "Vacation In Boracay",
+            destination: "Boracay, Aklan",
+            region: "Visayas",
+            type: "Beach Holiday",
+            budget: "₱ 20,000.00",
+            travelers: 2,
+            description: "White sand beach vacation with water activities",
+            startDate: "2024-03-15",
+            endDate: "2024-03-20",
+            status: "upcoming",
+            isFavorite: true
+        },
+        {
+            id: 2,
+            name: "Tokyo City Adventure",
+            destination: "Tokyo, Japan",
+            region: "International",
+            type: "City Exploration",
+            budget: "₱ 50,000.00",
+            travelers: 1,
+            description: "Japanese culture, food, and temple visits",
+            startDate: "2024-02-10",
+            endDate: "2024-02-17",
+            status: "completed",
+            isFavorite: true
+        },
+        {
+            id: 3,
+            name: "Baguio Family Getaway",
+            destination: "Baguio City, Benguet",
+            region: "Luzon",
+            type: "Mountain Vacation",
+            budget: "₱ 15,000.00",
+            travelers: 4,
+            description: "Cool weather escape with strawberries and parks",
+            startDate: "2024-04-05",
+            endDate: "2024-04-07",
+            status: "upcoming",
+            isFavorite: false
+        }
+    ];
+    
+    let drafts = [
+        {
+            id: 101,
+            name: "Palawan Island Hopping",
+            destination: "El Nido, Palawan",
+            description: "Planning island hopping adventure...",
+            progress: 65,
+            lastEdited: "2 days ago"
+        },
+        {
+            id: 102,
+            name: "Cebu Food Trip",
+            destination: "Cebu City",
+            description: "Trying famous Cebuano dishes...",
+            progress: 40,
+            lastEdited: "1 week ago"
+        }
+    ];
+    
+    let currentFilter = 'all';
+    let searchTerm = '';
+    
+    // Trip actions
+    function viewTrip(tripId) {
+        const trip = trips.find(t => t.id === tripId);
+        alert(`Would view trip: ${trip.name}`);
+        // window.location.href = `trip-details.html?id=${tripId}`;
+    }
+    
+    function toggleFavorite(tripId) {
+        const trip = trips.find(t => t.id === tripId);
+        if (trip) {
+            trip.isFavorite = !trip.isFavorite;
+            
+            // Update button visual
+            const btn = event.target.closest('.favorite-btn');
+            if (btn) {
+                btn.classList.toggle('active');
+                const icon = btn.querySelector('i');
+                if (trip.isFavorite) {
+                    icon.style.fill = '#ff3b2f';
+                    icon.style.color = '#ff3b2f';
+                } else {
+                    icon.style.fill = 'none';
+                    icon.style.color = 'currentColor';
+                }
+            }
+        }
+    }
+    
+    function toggleMenu(tripId) {
+        // Close all other menus
+        document.querySelectorAll('.settings-menu').forEach(menu => {
+            menu.classList.remove('active');
+        });
+        
+        // Toggle clicked menu
+        const menu = document.getElementById(`menu-${tripId}`);
+        menu.classList.toggle('active');
+        
+        // Close when clicking elsewhere
+        setTimeout(() => {
+            const closeHandler = (e) => {
+                if (!menu.contains(e.target) && !e.target.closest('.settings-icon')) {
+                    menu.classList.remove('active');
+                    document.removeEventListener('click', closeHandler);
+                }
+            };
+            document.addEventListener('click', closeHandler);
+        }, 10);
+    }
+    
+    function editTrip(tripId) {
+        const trip = trips.find(t => t.id === tripId);
+        alert(`Would edit trip: ${trip.name}`);
+        // window.location.href = `edit-trip.html?id=${tripId}`;
+    }
+    
+    function deleteTrip(tripId) {
+        const trip = trips.find(t => t.id === tripId);
+        if (trip && confirm(`Delete "${trip.name}"?`)) {
+            trips = trips.filter(t => t.id !== tripId);
+            alert('Trip deleted!');
+            location.reload(); // Refresh to show updated list
+        }
+    }
+    
+    // Draft actions
+    function continueDraft(draftId) {
+        const draft = drafts.find(d => d.id === draftId);
+        alert(`Would continue draft: ${draft.name} (${draft.progress}% complete)`);
+        // window.location.href = `add-trip.html?draft=${draftId}`;
+    }
+    
+    function deleteDraft(draftId) {
+        const draft = drafts.find(d => d.id === draftId);
+        if (draft && confirm(`Delete draft "${draft.name}"?`)) {
+            drafts = drafts.filter(d => d.id !== draftId);
+            alert('Draft deleted!');
+            location.reload(); // Refresh to show updated list
+        }
+    }
+    
+    function openDraftsPage() {
+        alert('Would open full drafts management page');
+        // window.location.href = 'drafts.html';
+    }
+    
+    function filterTrips(filterType) {
+        currentFilter = filterType;
+        
+        // Update active filter button
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        event.target.classList.add('active');
+        
+        alert(`Filtering trips by: ${filterType}`);
+        // Actual filtering logic would go here
+    }
+    
+    function searchTrips() {
+        searchTerm = document.getElementById('searchInput').value.toLowerCase();
+        console.log(`Searching for: ${searchTerm}`);
+        // Actual search logic would go here
+    }
+    
+    function addNewTrip() {
+        alert('Would go to Add Trip form');
+        // window.location.href = 'add-trip.html';
+    }
+    
+    function goBack() {
+        alert('Would go back to Dashboard');
+        // window.location.href = 'dashboard.html';
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Journal Drafts - Travel Life Diary</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,100..1000;1,100..1000&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #ff3b2f 0%, #ff954d 100%);
+            --text-orange: #ff6b3d;
+            --input-bg: #eeeeee;
+            --light-orange: #ffe8e0;
+            --dark-orange: #e55a35;
+            --shadow-medium: 0 8px 24px rgba(0,0,0,0.12);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        body {
+            background: var(--primary-gradient);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: white;
+            width: 100%;
+            max-width: 600px;
+            border-radius: 40px;
+            padding: 30px;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.2);
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        /* Header section matching your My Trips style */
+        .header-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .title-area h1 {
+            color: var(--text-orange);
+            font-size: 24px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .title-area p {
+            color: #666;
+            font-size: 14px;
+            margin-top: 4px;
+        }
+
+        /* Pressure plate button style from your design */
+        .btn-back {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            text-transform: uppercase;
+            background: var(--primary-gradient);
+            transition: transform 0.1s ease, box-shadow 0.1s ease;
+            box-shadow: 0 4px 0 rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-back:active {
+            transform: translateY(3px);
+            box-shadow: 0 1px 0 rgba(0,0,0,0.1);
+        }
+
+        /* Draft Cards Grid */
+        .drafts-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .draft-card {
+            background: #fff;
+            border: 3px solid transparent;
+            border-image: var(--primary-gradient) 1;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .draft-card:hover {
+            transform: scale(1.02);
+            box-shadow: var(--shadow-medium);
+        }
+
+        .draft-info {
+            flex: 1;
+        }
+
+        .draft-date {
+            font-size: 11px;
+            color: var(--text-orange);
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .draft-name {
+            font-size: 18px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .draft-preview {
+            font-size: 13px;
+            color: #777;
+            font-style: italic;
+        }
+
+        .draft-status {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 10px;
+        }
+
+        .progress-tag {
+            background: var(--light-orange);
+            color: var(--text-orange);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 800;
+        }
+
+        .action-icons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .icon-btn {
+            width: 35px;
+            height: 35px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: #f5f5f5;
+            color: #666;
+            border: none;
+        }
+
+        .icon-btn.edit:hover {
+            background: var(--primary-gradient);
+            color: white;
+        }
+
+        .icon-btn.delete:hover {
+            background: #ff3b2f;
+            color: white;
+        }
+
+        /* Empty state matching your trip list logic */
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #bbb;
+            border: 2px dashed #ddd;
+            border-radius: 20px;
+        }
+
+        .empty-state i {
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header-section">
+            <div class="title-area">
+                <h1>Journal Drafts</h1>
+                <p>Pick up where you left off</p>
+            </div>
+            <button class="btn-back" onclick="history.back()">
+                <i data-lucide="arrow-left" size="18"></i> Back
+            </button>
+        </div>
+
+        <div class="drafts-grid" id="draftsList">
+            <div class="draft-card" onclick="location.href='ADD_JOURNAL.html'">
+                <div class="draft-info">
+                    <div class="draft-date">Saved 2 hours ago</div>
+                    <div class="draft-name">Sunset at Boracay</div>
+                    <div class="draft-preview">"The colors in the sky today were absolutely..."</div>
+                </div>
+                <div class="draft-status">
+                    <span class="progress-tag">75% Complete</span>
+                    <div class="action-icons">
+                        <button class="icon-btn edit"><i data-lucide="pencil" size="16"></i></button>
+                        <button class="icon-btn delete" onclick="event.stopPropagation(); deleteDraft()"><i data-lucide="trash-2" size="16"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="draft-card" onclick="location.href='ADD_JOURNAL.html'">
+                <div class="draft-info">
+                    <div class="draft-date">Saved Yesterday</div>
+                    <div class="draft-name">Tokyo Street Food</div>
+                    <div class="draft-preview">"Tried the best Takoyaki near Shibuya..."</div>
+                </div>
+                <div class="draft-status">
+                    <span class="progress-tag">30% Complete</span>
+                    <div class="action-icons">
+                        <button class="icon-btn edit"><i data-lucide="pencil" size="16"></i></button>
+                        <button class="icon-btn delete" onclick="event.stopPropagation(); deleteDraft()"><i data-lucide="trash-2" size="16"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="empty-state" id="emptyState" style="display: none;">
+            <i data-lucide="book-open" size="48"></i>
+            <p>No unfinished drafts found.</p>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Icons
+        lucide.createIcons();
+
+        function deleteDraft() {
+            if(confirm("Are you sure you want to discard this draft?")) {
+                alert("Draft discarded.");
+                // Add logic to remove from LocalStorage here
+            }
+        }
+    </script>
+</body>
+</html>

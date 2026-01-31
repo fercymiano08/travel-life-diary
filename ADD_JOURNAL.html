@@ -1,0 +1,1355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Journal Entry - Travel Life Diary</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,100..1000;1,100..1000&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #ff3b2f 0%, #ff954d 100%);
+            --text-orange: #ff6b3d;
+            --input-bg: #eeeeee;
+            --light-orange: #ffe8e0;
+            --green: #4CAF50;
+            --red: #ff3b2f;
+            --blue: #2196F3;
+            --purple: #9C27B0;
+            --shadow-light: 0 4px 12px rgba(0,0,0,0.08);
+            --shadow-medium: 0 8px 24px rgba(0,0,0,0.12);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        body {
+            background: var(--primary-gradient);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+            overflow-x: hidden;
+        }
+
+        .container {
+            background-color: white;
+            width: 100%;
+            max-width: 500px;
+            border-radius: 30px;
+            padding: 25px 20px;
+            box-shadow: var(--shadow-medium);
+            max-height: 95vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        /* Mobile Header */
+        .mobile-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            position: sticky;
+            top: 0;
+            background: white;
+            padding: 10px 0;
+            z-index: 10;
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 25px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: var(--shadow-light);
+            flex-shrink: 0;
+        }
+
+        .back-btn:active {
+            transform: scale(0.95);
+        }
+
+        h1.main-title {
+            color: var(--text-orange);
+            font-size: 20px;
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-align: center;
+            flex-grow: 1;
+            padding: 0 10px;
+        }
+
+        /* Mobile Progress Steps */
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 25px;
+            position: relative;
+            padding: 0 10px;
+        }
+
+        .progress-steps::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 12%;
+            right: 12%;
+            height: 3px;
+            background: #eee;
+            z-index: 1;
+        }
+
+        .step {
+            position: relative;
+            z-index: 2;
+            background: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+            color: #999;
+            border: 3px solid #eee;
+        }
+
+        .step.active {
+            background: var(--primary-gradient);
+            color: white;
+            border-color: var(--text-orange);
+            transform: scale(1.1);
+        }
+
+        .step-label {
+            position: absolute;
+            top: 35px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 10px;
+            white-space: nowrap;
+            color: #999;
+            width: 70px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .step.active .step-label {
+            color: var(--text-orange);
+            font-weight: 700;
+        }
+
+        /* Mobile Form Sections */
+        .form-section {
+            position: relative;
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 4px solid;
+            border-image: var(--primary-gradient) 1;
+            display: none;
+        }
+
+        .form-section.active {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { 
+                opacity: 0; 
+                transform: translateX(20px); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateX(0); 
+            }
+        }
+
+        .section-title {
+            color: var(--text-orange);
+            font-size: 16px;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-group { 
+            margin-bottom: 18px; 
+        }
+
+        label {
+            display: block;
+            color: var(--text-orange);
+            font-size: 13px;
+            margin-bottom: 6px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .required::after {
+            content: " *";
+            color: var(--red);
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 14px;
+            background-color: var(--input-bg);
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            color: #333;
+            outline: none;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+
+        select {
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            background-size: 16px;
+            padding-right: 40px;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--text-orange);
+            background: white;
+            box-shadow: 0 0 0 3px rgba(255, 107, 61, 0.1);
+        }
+
+        textarea {
+            min-height: 150px;
+            resize: vertical;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        .mobile-row {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+
+        @media (min-width: 480px) {
+            .mobile-row {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        /* Mobile Mood/Weather Selectors */
+        .quick-selectors {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 8px;
+        }
+
+        @media (min-width: 400px) {
+            .quick-selectors {
+                grid-template-columns: repeat(5, 1fr);
+            }
+        }
+
+        .selector-card {
+            background: #f9f9f9;
+            border-radius: 12px;
+            padding: 15px 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+        }
+
+        .selector-card:active {
+            transform: scale(0.95);
+        }
+
+        .selector-card:hover, .selector-card.selected {
+            border-color: var(--text-orange);
+            background: var(--light-orange);
+            transform: translateY(-2px);
+        }
+
+        .selector-emoji {
+            font-size: 24px;
+            margin-bottom: 6px;
+        }
+
+        .selector-label {
+            font-weight: 700;
+            color: #333;
+            font-size: 12px;
+            margin-bottom: 3px;
+        }
+
+        .selector-desc {
+            font-size: 10px;
+            color: #666;
+            display: none;
+        }
+
+        @media (min-width: 480px) {
+            .selector-desc {
+                display: block;
+            }
+        }
+
+        /* Mobile Photo Upload */
+        .photo-upload-area {
+            border: 3px dashed #ccc;
+            border-radius: 15px;
+            padding: 25px 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 15px;
+        }
+
+        .photo-upload-area:active {
+            transform: scale(0.98);
+        }
+
+        .photo-upload-area:hover, .photo-upload-area.dragover {
+            border-color: var(--text-orange);
+            background: #f9f9f9;
+        }
+
+        .photo-preview-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .preview-image {
+            width: 100%;
+            height: 90px;
+            object-fit: cover;
+            border-radius: 10px;
+            border: 2px solid #eee;
+            transition: all 0.2s;
+        }
+
+        .preview-image:active {
+            transform: scale(0.95);
+        }
+
+        /* Mobile Tags */
+        .tags-input-container {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .tags-input-container input {
+            flex: 1;
+            padding: 12px;
+        }
+
+        .tag-add-btn {
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 0 15px;
+            font-weight: 700;
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: all 0.2s;
+        }
+
+        .tag-add-btn:active {
+            transform: scale(0.95);
+        }
+
+        .tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 8px;
+        }
+
+        .tag {
+            background: var(--light-orange);
+            color: var(--text-orange);
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .tag-remove {
+            cursor: pointer;
+            font-size: 14px;
+            line-height: 1;
+            opacity: 0.7;
+            padding: 2px;
+        }
+
+        .tag-remove:active {
+            opacity: 1;
+            transform: scale(1.2);
+        }
+
+        /* Mobile Navigation Buttons */
+        .form-navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 2px solid #eee;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 14px 20px;
+            border-radius: 25px;
+            border: none;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            flex: 1;
+            min-height: 50px;
+        }
+
+        .btn:active {
+            transform: scale(0.95);
+        }
+
+        .btn-primary {
+            background: var(--primary-gradient);
+            color: white;
+            box-shadow: var(--shadow-light);
+        }
+
+        .btn-secondary {
+            background: #f5f5f5;
+            color: #666;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        /* Mobile Info Box */
+        .info-box {
+            background: var(--light-orange);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 4px solid var(--text-orange);
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
+        /* Mobile Word Counter */
+        .word-counter {
+            text-align: right;
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+            font-weight: 600;
+        }
+
+        /* Mobile Helper Text */
+        .helper-text {
+            color: #666;
+            font-size: 12px;
+            margin-top: 5px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* Mobile Preview Styles */
+        .preview-content {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            max-height: 200px;
+            overflow-y: auto;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            text-align: center;
+            margin: 15px 0;
+        }
+
+        .summary-item {
+            background: #f0f7ff;
+            padding: 12px;
+            border-radius: 10px;
+        }
+
+        .summary-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--blue);
+            margin-bottom: 3px;
+        }
+
+        .summary-label {
+            font-size: 10px;
+            color: #666;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        /* Mobile-only adjustments */
+        @media (max-width: 380px) {
+            .container {
+                padding: 20px 15px;
+                border-radius: 25px;
+            }
+            
+            .step-label {
+                font-size: 9px;
+                width: 60px;
+            }
+            
+            .btn {
+                padding: 12px 15px;
+                font-size: 13px;
+            }
+            
+            .quick-selectors {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* Hide scrollbar but keep functionality */
+        .container::-webkit-scrollbar {
+            width: 5px;
+        }
+        
+        .container::-webkit-scrollbar-thumb {
+            background: var(--text-orange);
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Mobile Header -->
+    <div class="mobile-header">
+        <button class="back-btn" onclick="goBack()">
+            <i data-lucide="arrow-left" width="18"></i>
+            Back
+        </button>
+        
+        <h1 class="main-title">
+            <i data-lucide="book-open" width="20"></i> New Journal
+        </h1>
+        
+        <div style="width: 70px;"></div> <!-- Spacer for alignment -->
+    </div>
+
+    <!-- Mobile Progress Steps -->
+    <div class="progress-steps">
+        <div class="step active" data-step="1">
+            1
+            <div class="step-label">Trip & Date</div>
+        </div>
+        <div class="step" data-step="2">
+            2
+            <div class="step-label">Write</div>
+        </div>
+        <div class="step" data-step="3">
+            3
+            <div class="step-label">Photos</div>
+        </div>
+        <div class="step" data-step="4">
+            4
+            <div class="step-label">Review</div>
+        </div>
+    </div>
+
+    <form id="journalForm">
+        <!-- SECTION 1: TRIP & DATE -->
+        <div class="form-section active" id="section-1">
+            <h2 class="section-title"><i data-lucide="calendar" width="18"></i> When & Where</h2>
+            
+            <div class="info-box">
+                <p><strong>📝 Select the trip and date for this entry</strong></p>
+            </div>
+
+            <div class="form-group">
+                <label for="tripSelect" class="required">Select Trip</label>
+                <select id="tripSelect" required>
+                    <option value="" disabled selected>Choose a trip...</option>
+                    <option value="1">Vacation in Boracay</option>
+                    <option value="2">Tokyo City Adventure</option>
+                    <option value="3">Baguio Family Getaway</option>
+                </select>
+                <div class="helper-text"><i data-lucide="info" width="12"></i> Entries are linked to trips</div>
+            </div>
+
+            <div class="mobile-row">
+                <div class="form-group">
+                    <label for="entryDate" class="required">Date</label>
+                    <input type="date" id="entryDate" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="entryTime">Time</label>
+                    <select id="entryTime">
+                        <option value="" selected>Any time</option>
+                        <option value="morning">🌅 Morning</option>
+                        <option value="afternoon">☀️ Afternoon</option>
+                        <option value="evening">🌇 Evening</option>
+                        <option value="night">🌙 Night</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div style="background: #f9f9f9; padding: 15px; border-radius: 12px;">
+                    <p id="dayOfTrip" style="font-size: 14px; color: #666;">Select trip and date</p>
+                </div>
+            </div>
+
+            <div class="form-navigation">
+                <button type="button" class="btn btn-secondary" onclick="cancelJournal()">
+                    <i data-lucide="x" width="16"></i> Cancel
+                </button>
+                <button type="button" class="btn btn-primary" onclick="nextSection()">
+                    Next <i data-lucide="arrow-right" width="16"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- SECTION 2: WRITE ENTRY -->
+        <div class="form-section" id="section-2">
+            <h2 class="section-title"><i data-lucide="edit" width="18"></i> Write Your Story</h2>
+            
+            <div class="info-box">
+                <p>Write freely about your day. What made it special?</p>
+            </div>
+
+            <div class="form-group">
+                <label for="entryTitle">Title (Optional)</label>
+                <input type="text" id="entryTitle" placeholder="e.g.: Amazing Sunset">
+            </div>
+
+            <div class="form-group">
+                <label for="journalContent" class="required">Your Entry</label>
+                <textarea id="journalContent" placeholder="Start writing about your day... What did you do? How did you feel? What memories do you want to keep?" required></textarea>
+                <div class="word-counter" id="wordCounter">0 words</div>
+            </div>
+
+            <div class="form-navigation">
+                <button type="button" class="btn btn-secondary" onclick="prevSection()">
+                    <i data-lucide="arrow-left" width="16"></i> Back
+                </button>
+                <button type="button" class="btn btn-primary" onclick="nextSection()">
+                    Next <i data-lucide="arrow-right" width="16"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- SECTION 3: PHOTOS & MOOD -->
+        <div class="form-section" id="section-3">
+            <h2 class="section-title"><i data-lucide="camera" width="18"></i> Photos & Feelings</h2>
+            
+            <!-- Mood Selection -->
+            <div class="form-group">
+                <label>Your Mood</label>
+                <div class="quick-selectors" id="moodSelectors">
+                    <div class="selector-card" onclick="selectMood('happy')">
+                        <div class="selector-emoji">😊</div>
+                        <div class="selector-label">Happy</div>
+                        <div class="selector-desc">Feeling great</div>
+                    </div>
+                    
+                    <div class="selector-card" onclick="selectMood('excited')">
+                        <div class="selector-emoji">🤩</div>
+                        <div class="selector-label">Excited</div>
+                        <div class="selector-desc">Adventure time</div>
+                    </div>
+                    
+                    <div class="selector-card" onclick="selectMood('relaxed')">
+                        <div class="selector-emoji">😌</div>
+                        <div class="selector-label">Relaxed</div>
+                        <div class="selector-desc">Chilling out</div>
+                    </div>
+                    
+                    <div class="selector-card" onclick="selectMood('tired')">
+                        <div class="selector-emoji">😴</div>
+                        <div class="selector-label">Tired</div>
+                        <div class="selector-desc">Long day</div>
+                    </div>
+                    
+                    <div class="selector-card" onclick="selectMood('stressed')">
+                        <div class="selector-emoji">😫</div>
+                        <div class="selector-label">Stressed</div>
+                        <div class="selector-desc">Need break</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Weather Selection -->
+            <div class="form-group">
+                <label>Weather</label>
+                <div class="quick-selectors" id="weatherSelectors">
+                    <div class="selector-card" onclick="selectWeather('sunny')">
+                        <div class="selector-emoji">☀️</div>
+                        <div class="selector-label">Sunny</div>
+                    </div>
+                    
+                    <div class="selector-card" onclick="selectWeather('cloudy')">
+                        <div class="selector-emoji">☁️</div>
+                        <div class="selector-label">Cloudy</div>
+                    </div>
+                    
+                    <div class="selector-card" onclick="selectWeather('rainy')">
+                        <div class="selector-emoji">🌧️</div>
+                        <div class="selector-label">Rainy</div>
+                    </div>
+                    
+                    <div class="selector-card" onclick="selectWeather('stormy')">
+                        <div class="selector-emoji">⛈️</div>
+                        <div class="selector-label">Stormy</div>
+                    </div>
+                    
+                    <div class="selector-card" onclick="selectWeather('windy')">
+                        <div class="selector-emoji">💨</div>
+                        <div class="selector-label">Windy</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Photo Upload -->
+            <div class="form-group">
+                <label>Add Photos</label>
+                <div class="photo-upload-area" onclick="document.getElementById('photoUpload').click()" id="uploadArea">
+                    <i data-lucide="camera" style="width: 40px; height: 40px; color: var(--text-orange);"></i>
+                    <h3 style="color: var(--text-orange); margin: 12px 0 8px; font-size: 16px;">Tap to Add Photos</h3>
+                    <p style="color: #666; font-size: 13px;">Max 10 photos • 5MB each</p>
+                    <input type="file" id="photoUpload" accept="image/*" multiple style="display: none;">
+                </div>
+                
+                <div class="photo-preview-grid" id="photoPreview">
+                    <!-- Photos will appear here -->
+                </div>
+            </div>
+
+            <!-- Locations & Activities -->
+            <div class="form-group">
+                <label>📍 Locations</label>
+                <div class="tags-input-container">
+                    <input type="text" id="locationInput" placeholder="Where did you go?">
+                    <button type="button" class="tag-add-btn" onclick="addLocation()">Add</button>
+                </div>
+                <div class="tags-container" id="locationsContainer">
+                    <!-- Location tags -->
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>🎯 Activities</label>
+                <div class="tags-input-container">
+                    <input type="text" id="activityInput" placeholder="What did you do?">
+                    <button type="button" class="tag-add-btn" onclick="addActivity()">Add</button>
+                </div>
+                <div class="tags-container" id="activitiesContainer">
+                    <!-- Activity tags -->
+                </div>
+            </div>
+
+            <div class="form-navigation">
+                <button type="button" class="btn btn-secondary" onclick="prevSection()">
+                    <i data-lucide="arrow-left" width="16"></i> Back
+                </button>
+                <button type="button" class="btn btn-primary" onclick="nextSection()">
+                    Next <i data-lucide="arrow-right" width="16"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- SECTION 4: REVIEW & SAVE -->
+        <div class="form-section" id="section-4">
+            <h2 class="section-title"><i data-lucide="clipboard-check" width="18"></i> Review & Save</h2>
+            
+            <div class="info-box" style="background: #e8f5e9; border-left-color: #4CAF50;">
+                <p><strong>✅ Ready to save!</strong> Review your entry before saving.</p>
+            </div>
+
+            <!-- Preview -->
+            <div class="form-group">
+                <label>Preview</label>
+                <div style="background: #f9f9f9; padding: 15px; border-radius: 12px;">
+                    <h3 id="previewTitle" style="color: var(--text-orange); margin-bottom: 10px; font-size: 16px;">No title</h3>
+                    <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 10px; font-size: 12px; color: #666;">
+                        <span><i data-lucide="calendar" width="12"></i> <span id="previewDate">-</span></span>
+                        <span><i data-lucide="map-pin" width="12"></i> <span id="previewTrip">-</span></span>
+                        <span id="previewMood"></span>
+                        <span id="previewWeather"></span>
+                    </div>
+                    <div class="preview-content" id="previewContent">
+                        Your content will appear here...
+                    </div>
+                    <div id="previewTags" style="margin-top: 10px;"></div>
+                </div>
+            </div>
+
+            <!-- Summary Stats -->
+            <div class="form-group">
+                <div class="summary-grid">
+                    <div class="summary-item">
+                        <div class="summary-value" id="summaryWords">0</div>
+                        <div class="summary-label">Words</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-value" id="summaryLocations">0</div>
+                        <div class="summary-label">Locations</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-value" id="summaryActivities">0</div>
+                        <div class="summary-label">Activities</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-navigation">
+                <button type="button" class="btn btn-secondary" onclick="prevSection()">
+                    <i data-lucide="arrow-left" width="16"></i> Back
+                </button>
+                
+                <button type="button" class="btn btn-secondary" onclick="saveAsDraft()">
+                    <i data-lucide="save" width="16"></i> Draft
+                </button>
+                
+                <button type="submit" class="btn btn-primary">
+                    <i data-lucide="check-circle" width="16"></i> Save
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    // Initialize icons
+    lucide.createIcons();
+    
+    // State management
+    let currentSection = 1;
+    let selectedTripId = null;
+    let selectedMood = '';
+    let selectedWeather = '';
+    let photos = [];
+    let locations = [];
+    let activities = [];
+    
+    // Initialize on load
+    window.onload = function() {
+        // Set default date to today
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('entryDate').value = today;
+        
+        // Word count listener
+        document.getElementById('journalContent').addEventListener('input', updateWordCount);
+        
+        // Photo upload listener
+        document.getElementById('photoUpload').addEventListener('change', handlePhotoUpload);
+        
+        // Enter key for tags
+        document.getElementById('locationInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                addLocation();
+            }
+        });
+        
+        document.getElementById('activityInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                addActivity();
+            }
+        });
+        
+        // Trip selection listener
+        document.getElementById('tripSelect').addEventListener('change', updateDayOfTrip);
+        document.getElementById('entryDate').addEventListener('change', updateDayOfTrip);
+        
+        // Form submission
+        document.getElementById('journalForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            saveJournalEntry();
+        });
+        
+        // Initialize day of trip display
+        updateDayOfTrip();
+        
+        // Add touch feedback for buttons
+        document.querySelectorAll('.btn, .selector-card, .photo-upload-area').forEach(btn => {
+            btn.addEventListener('touchstart', function() {
+                this.style.transform = 'scale(0.95)';
+            });
+            
+            btn.addEventListener('touchend', function() {
+                this.style.transform = '';
+            });
+        });
+    };
+    
+    // FIXED: Navigation functions
+    function nextSection() {
+        // Validate current section before moving
+        if (!validateCurrentSection()) {
+            return false;
+        }
+        
+        // Hide current section
+        document.getElementById(`section-${currentSection}`).classList.remove('active');
+        document.querySelector(`.step[data-step="${currentSection}"]`).classList.remove('active');
+        
+        // Show next section
+        currentSection++;
+        document.getElementById(`section-${currentSection}`).classList.add('active');
+        document.querySelector(`.step[data-step="${currentSection}"]`).classList.add('active');
+        
+        // Update preview if on last section
+        if (currentSection === 4) {
+            updatePreview();
+        }
+        
+        // Scroll to top of section on mobile
+        document.querySelector('.container').scrollTop = 0;
+        
+        return true;
+    }
+    
+    function prevSection() {
+        // Hide current section
+        document.getElementById(`section-${currentSection}`).classList.remove('active');
+        document.querySelector(`.step[data-step="${currentSection}"]`).classList.remove('active');
+        
+        // Show previous section
+        currentSection--;
+        document.getElementById(`section-${currentSection}`).classList.add('active');
+        document.querySelector(`.step[data-step="${currentSection}"]`).classList.add('active');
+        
+        // Scroll to top of section on mobile
+        document.querySelector('.container').scrollTop = 0;
+    }
+    
+    function validateCurrentSection() {
+        if (currentSection === 1) {
+            const tripId = document.getElementById('tripSelect').value;
+            const entryDate = document.getElementById('entryDate').value;
+            
+            if (!tripId) {
+                alert('Please select a trip');
+                document.getElementById('tripSelect').focus();
+                return false;
+            }
+            
+            if (!entryDate) {
+                alert('Please select a date');
+                document.getElementById('entryDate').focus();
+                return false;
+            }
+            
+            selectedTripId = tripId;
+            return true;
+            
+        } else if (currentSection === 2) {
+            const content = document.getElementById('journalContent').value.trim();
+            
+            if (!content) {
+                alert('Please write something in your journal entry');
+                document.getElementById('journalContent').focus();
+                return false;
+            }
+            
+            return true;
+        }
+        
+        return true;
+    }
+    
+    // Trip and date calculations
+    function updateDayOfTrip() {
+        const tripId = document.getElementById('tripSelect').value;
+        const entryDate = document.getElementById('entryDate').value;
+        
+        if (!tripId || !entryDate) {
+            document.getElementById('dayOfTrip').textContent = 'Select trip and date';
+            return;
+        }
+        
+        // Load trip data
+        const trips = JSON.parse(localStorage.getItem('travelTrips') || '[]');
+        const trip = trips.find(t => t.id == tripId);
+        
+        if (trip && trip.startDate) {
+            const startDate = new Date(trip.startDate);
+            const currentDate = new Date(entryDate);
+            
+            const diffTime = currentDate.getTime() - startDate.getTime();
+            const diffDays = Math.floor(diffTime / (1000 * 3600 * 24)) + 1;
+            
+            let dayText = '';
+            if (diffDays === 1) dayText = 'Arrival Day';
+            else if (diffDays === trip.duration) dayText = 'Departure Day';
+            else if (diffDays > 0 && diffDays <= trip.duration) dayText = `Day ${diffDays} of ${trip.duration}`;
+            else if (diffDays < 1) dayText = 'Before trip started';
+            else dayText = 'After trip ended';
+            
+            document.getElementById('dayOfTrip').innerHTML = `
+                <strong>${trip.name}</strong><br>
+                ${dayText}
+            `;
+        }
+    }
+    
+    // Mood & Weather selection
+    function selectMood(mood) {
+        selectedMood = mood;
+        
+        // Update UI
+        document.querySelectorAll('#moodSelectors .selector-card').forEach(card => {
+            card.classList.remove('selected');
+        });
+        event.currentTarget.classList.add('selected');
+    }
+    
+    function selectWeather(weather) {
+        selectedWeather = weather;
+        
+        // Update UI
+        document.querySelectorAll('#weatherSelectors .selector-card').forEach(card => {
+            card.classList.remove('selected');
+        });
+        event.currentTarget.classList.add('selected');
+    }
+    
+    // Word count
+    function updateWordCount() {
+        const text = document.getElementById('journalContent').value;
+        const words = text.trim() === '' ? 0 : text.trim().split(/\s+/).length;
+        document.getElementById('wordCounter').textContent = `${words} words`;
+    }
+    
+    // Photo handling
+    function handlePhotoUpload(e) {
+        const files = e.target.files;
+        const preview = document.getElementById('photoPreview');
+        
+        if (files.length > 10) {
+            alert('Maximum 10 photos per entry');
+            return;
+        }
+        
+        // Clear existing preview
+        preview.innerHTML = '';
+        photos = [];
+        
+        Array.from(files).slice(0, 10).forEach(file => {
+            if (!file.type.startsWith('image/')) {
+                alert(`${file.name} is not an image`);
+                return;
+            }
+            
+            if (file.size > 5 * 1024 * 1024) {
+                alert(`${file.name} is too large (max 5MB)`);
+                return;
+            }
+            
+            photos.push(file);
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.className = 'preview-image';
+                img.onclick = function() {
+                    // Simple image viewer for mobile
+                    const viewer = window.open('', '_blank');
+                    viewer.document.write(`
+                        <html>
+                            <head><title>Photo Preview</title>
+                            <style>body { margin: 0; background: black; display: flex; justify-content: center; align-items: center; height: 100vh; }
+                            img { max-width: 100%; max-height: 100%; }</style>
+                            </head>
+                            <body><img src="${e.target.result}"></body>
+                        </html>
+                    `);
+                };
+                preview.appendChild(img);
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+    
+    // Location & Activities
+    function addLocation() {
+        const input = document.getElementById('locationInput');
+        const location = input.value.trim();
+        
+        if (location && !locations.includes(location)) {
+            locations.push(location);
+            updateLocationTags();
+            input.value = '';
+            input.focus();
+        }
+    }
+    
+    function updateLocationTags() {
+        const container = document.getElementById('locationsContainer');
+        container.innerHTML = locations.map(location => `
+            <div class="tag">
+                <i data-lucide="map-pin" width="12"></i>
+                ${location}
+                <span class="tag-remove" onclick="removeLocation('${location}')">×</span>
+            </div>
+        `).join('');
+        
+        if (locations.length === 0) {
+            container.innerHTML = '<div style="color: #999; font-size: 12px; padding: 8px;">No locations added</div>';
+        }
+        
+        lucide.createIcons();
+    }
+    
+    function removeLocation(location) {
+        locations = locations.filter(l => l !== location);
+        updateLocationTags();
+    }
+    
+    function addActivity() {
+        const input = document.getElementById('activityInput');
+        const activity = input.value.trim();
+        
+        if (activity && !activities.includes(activity)) {
+            activities.push(activity);
+            updateActivityTags();
+            input.value = '';
+            input.focus();
+        }
+    }
+    
+    function updateActivityTags() {
+        const container = document.getElementById('activitiesContainer');
+        container.innerHTML = activities.map(activity => `
+            <div class="tag">
+                <i data-lucide="star" width="12"></i>
+                ${activity}
+                <span class="tag-remove" onclick="removeActivity('${activity}')">×</span>
+            </div>
+        `).join('');
+        
+        if (activities.length === 0) {
+            container.innerHTML = '<div style="color: #999; font-size: 12px; padding: 8px;">No activities added</div>';
+        }
+        
+        lucide.createIcons();
+    }
+    
+    function removeActivity(activity) {
+        activities = activities.filter(a => a !== activity);
+        updateActivityTags();
+    }
+    
+    // Update preview in section 4
+    function updatePreview() {
+        // Title
+        const title = document.getElementById('entryTitle').value || 'Untitled Entry';
+        document.getElementById('previewTitle').textContent = title;
+        
+        // Date and trip
+        const date = new Date(document.getElementById('entryDate').value);
+        const tripSelect = document.getElementById('tripSelect');
+        const tripName = tripSelect.options[tripSelect.selectedIndex].text;
+        
+        document.getElementById('previewDate').textContent = date.toLocaleDateString('en-US', { 
+            month: 'short', 
+            day: 'numeric' 
+        });
+        document.getElementById('previewTrip').textContent = tripName;
+        
+        // Mood and weather
+        const moodEmoji = {
+            'happy': '😊',
+            'excited': '🤩', 
+            'relaxed': '😌',
+            'tired': '😴',
+            'stressed': '😫'
+        }[selectedMood] || '';
+        
+        const weatherEmoji = {
+            'sunny': '☀️',
+            'cloudy': '☁️',
+            'rainy': '🌧️',
+            'stormy': '⛈️',
+            'windy': '💨'
+        }[selectedWeather] || '';
+        
+        document.getElementById('previewMood').innerHTML = moodEmoji ? `${moodEmoji} ${selectedMood}` : '';
+        document.getElementById('previewWeather').innerHTML = weatherEmoji ? `${weatherEmoji}` : '';
+        
+        // Content preview (first 200 chars)
+        const content = document.getElementById('journalContent').value;
+        document.getElementById('previewContent').textContent = 
+            content.length > 200 ? content.substring(0, 200) + '...' : content;
+        
+        // Tags preview
+        const tagsContainer = document.getElementById('previewTags');
+        const allTags = [...locations, ...activities];
+        tagsContainer.innerHTML = allTags.slice(0, 3).map(tag => 
+            `<span style="background: var(--light-orange); color: var(--text-orange); padding: 4px 10px; border-radius: 12px; font-size: 11px; margin-right: 5px;">${tag}</span>`
+        ).join('');
+        
+        if (allTags.length > 3) {
+            tagsContainer.innerHTML += `<span style="color: #666; font-size: 11px;">+${allTags.length - 3} more</span>`;
+        }
+        
+        // Update summary stats
+        const wordCount = content.trim().split(/\s+/).length;
+        document.getElementById('summaryWords').textContent = wordCount;
+        document.getElementById('summaryLocations').textContent = locations.length;
+        document.getElementById('summaryActivities').textContent = activities.length;
+    }
+    
+    // Save functions
+    function saveJournalEntry() {
+        const title = document.getElementById('entryTitle').value.trim();
+        const content = document.getElementById('journalContent').value.trim();
+        const dateStr = document.getElementById('entryDate').value;
+        const timeOfDay = document.getElementById('entryTime').value;
+        const tripId = document.getElementById('tripSelect').value;
+        
+        if (!tripId || !content || !dateStr) {
+            alert('Please complete all required fields');
+            return;
+        }
+        
+        // Get trip name
+        const tripSelect = document.getElementById('tripSelect');
+        const tripName = tripSelect.options[tripSelect.selectedIndex].text;
+        
+        const entry = {
+            id: Date.now(),
+            tripId: tripId,
+            tripName: tripName,
+            date: dateStr,
+            timeOfDay: timeOfDay,
+            title: title || 'Untitled Entry',
+            content: content,
+            mood: selectedMood,
+            weather: selectedWeather,
+            locations: locations,
+            activities: activities,
+            photos: photos.length,
+            wordCount: content.trim().split(/\s+/).length,
+            isFavorite: false,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+        };
+        
+        // Save to localStorage
+        let entries = JSON.parse(localStorage.getItem('dailyJournalEntries') || '[]');
+        entries.push(entry);
+        localStorage.setItem('dailyJournalEntries', JSON.stringify(entries));
+        
+        // Save photos (simplified for demo)
+        if (photos.length > 0) {
+            alert(`✅ Journal saved with ${photos.length} photos!`);
+        } else {
+            alert('✅ Journal entry saved successfully!');
+        }
+        
+        // Navigate back to journals list
+        setTimeout(() => {
+            window.location.href = 'JOURNALS.html';
+        }, 1000);
+    }
+    
+    function saveAsDraft() {
+        alert('💾 Draft saved! You can continue later.');
+        // In a real app, you'd save to a drafts storage
+    }
+    
+    // Navigation
+    function goBack() {
+        if (confirm('Leave without saving?')) {
+            window.location.href = 'JOURNALS.html';
+        }
+    }
+    
+    function cancelJournal() {
+        goBack();
+    }
+    
+    // Mobile touch enhancements
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add swipe gesture for navigation (optional)
+        let touchStartX = 0;
+        let touchEndX = 0;
+        
+        document.addEventListener('touchstart', function(e) {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+        
+        document.addEventListener('touchend', function(e) {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+        
+        function handleSwipe() {
+            const swipeThreshold = 50;
+            const diff = touchStartX - touchEndX;
+            
+            if (Math.abs(diff) > swipeThreshold) {
+                if (diff > 0 && currentSection < 4) {
+                    // Swipe left - next
+                    nextSection();
+                } else if (diff < 0 && currentSection > 1) {
+                    // Swipe right - previous
+                    prevSection();
+                }
+            }
+        }
+    });
+</script>
+</body>
+</html>

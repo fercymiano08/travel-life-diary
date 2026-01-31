@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Analytics - Travel Life Diary</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,100..1000;1,100..1000&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #ff3b2f 0%, #ff954d 100%);
+            --text-orange: #ff6b3d;
+            --input-bg: #eeeeee;
+            --light-orange: #ffe8e0;
+            --shadow-medium: 0 8px 24px rgba(0,0,0,0.12);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        body {
+            background: var(--primary-gradient);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: white;
+            width: 100%;
+            max-width: 600px;
+            border-radius: 40px;
+            padding: 30px;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.2);
+        }
+
+        /* HEADER */
+        .header-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .title-area h1 {
+            color: var(--text-orange);
+            font-size: 22px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .btn-caps {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 15px;
+            color: white;
+            font-weight: 800;
+            font-size: 13px;
+            background: var(--primary-gradient);
+            box-shadow: 0 4px 0 rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+
+        .btn-caps:active {
+            transform: translateY(3px);
+            box-shadow: 0 1px 0 rgba(0,0,0,0.1);
+        }
+
+        /* MODULES */
+        .module-section {
+            border: 2px solid #f2f2f2;
+            border-radius: 25px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .module-label {
+            font-size: 11px;
+            font-weight: 900;
+            color: #ccc;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+        }
+
+        /* SMART NERDY GRAPHS (CSS BASED) */
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .data-box {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 20px;
+            text-align: center;
+        }
+
+        .data-box h2 { color: var(--text-orange); font-size: 32px; }
+        .data-box p { font-size: 10px; font-weight: 800; color: #999; text-transform: uppercase; }
+
+        /* Expense Bar Graph */
+        .bar-container {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+            height: 100px;
+            padding-top: 10px;
+        }
+
+        .bar {
+            width: 30px;
+            background: var(--primary-gradient);
+            border-radius: 8px 8px 0 0;
+            position: relative;
+        }
+
+        .bar::after {
+            content: attr(data-label);
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 9px;
+            font-weight: 800;
+            color: #777;
+        }
+
+        /* Region Breakdown List */
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .stat-name { font-size: 14px; font-weight: 700; color: #444; }
+        
+        .progress-track {
+            flex: 1;
+            height: 8px;
+            background: #eee;
+            border-radius: 10px;
+            margin: 0 15px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--primary-gradient);
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header-section">
+            <div class="title-area">
+                <h1>CORE ANALYTICS</h1>
+            </div>
+            <button class="btn-caps" onclick="location.href='DASHBOARD.html'">DASHBOARD</button>
+        </div>
+
+        <div class="module-section">
+            <div class="module-label">DATA OVERVIEW</div>
+            <div class="analytics-grid">
+                <div class="data-box">
+                    <h2>24</h2>
+                    <p>TOTAL CHECK-INS</p>
+                </div>
+                <div class="data-box">
+                    <h2>₱12K</h2>
+                    <p>AVG. EXPENSE</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="module-section">
+            <div class="module-label">EXPENSE WEIGHT (PHP)</div>
+            <div class="bar-container">
+                <div class="bar" style="height: 80%;" data-label="STAY"></div>
+                <div class="bar" style="height: 40%;" data-label="FOOD"></div>
+                <div class="bar" style="height: 90%;" data-label="TRIP"></div>
+                <div class="bar" style="height: 20%;" data-label="SHOP"></div>
+            </div>
+            <div style="height: 25px;"></div> </div>
+
+        <div class="module-section">
+            <div class="module-label">REGIONAL PENETRATION</div>
+            
+            <div class="stat-row">
+                <span class="stat-name">LUZON</span>
+                <div class="progress-track"><div class="progress-bar" style="width: 65%;"></div></div>
+                <span class="stat-name">65%</span>
+            </div>
+
+            <div class="stat-row">
+                <span class="stat-name">VISAYAS</span>
+                <div class="progress-track"><div class="progress-bar" style="width: 30%;"></div></div>
+                <span class="stat-name">30%</span>
+            </div>
+
+            <div class="stat-row">
+                <span class="stat-name">MINDANAO</span>
+                <div class="progress-track"><div class="progress-bar" style="width: 10%;"></div></div>
+                <span class="stat-name">10%</span>
+            </div>
+        </div>
+
+        <div style="display: flex; gap: 10px;">
+            <button class="btn-caps" style="flex: 1; background: #eee; color: #444; box-shadow: 0 4px 0 #ddd;">EXPORT PDF</button>
+            <button class="btn-caps" style="flex: 1;" onclick="location.reload()">REFRESH DATA</button>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>

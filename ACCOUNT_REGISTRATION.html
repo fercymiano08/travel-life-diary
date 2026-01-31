@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- FIXED: Mobile viewport with safe areas -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>User Registration - Travel Life Diary</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #ff3b2f 0%, #ff954d 100%);
+            --input-bg: #d9d9d9;
+            --text-orange: #ff5e3a;
+            --dark-grey: #444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'DM Sans', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            min-height: 100vh;
+            min-height: -webkit-fill-available;
+            background: var(--primary-gradient);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: env(safe-area-inset-top) max(20px, env(safe-area-inset-right)) env(safe-area-inset-bottom) max(20px, env(safe-area-inset-left));
+            touch-action: manipulation;
+            overflow-y: auto; /* Allow scrolling on very small screens */
+        }
+
+        /* Main Card - FIXED for mobile */
+        .registration-card {
+            background: white;
+            width: 95%;
+            max-width: 850px;
+            max-height: 90vh;
+            border-radius: 30px; /* Smaller radius for mobile */
+            padding: clamp(25px, 5vw, 40px) clamp(20px, 4vw, 60px);
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            overflow-y: auto;
+            margin: 20px 0;
+            position: relative;
+        }
+
+        /* Custom Scrollbar */
+        .registration-card::-webkit-scrollbar { width: 6px; }
+        .registration-card::-webkit-scrollbar-thumb { background: #ff954d; border-radius: 10px; }
+
+        h1 {
+            color: var(--text-orange);
+            text-align: center;
+            font-size: clamp(1.5rem, 5vw, 2.2rem);
+            font-weight: 500;
+            margin-bottom: clamp(20px, 4vw, 30px);
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        /* Avatar Section - FIXED touch targets */
+        .avatar-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: clamp(25px, 5vw, 40px);
+        }
+
+        .avatar-wrapper {
+            position: relative;
+            width: clamp(100px, 25vw, 120px);
+            height: clamp(100px, 25vw, 120px);
+            background: #eee;
+            border-radius: 50%;
+            border: 4px solid var(--text-orange);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            cursor: pointer;
+            touch-action: manipulation;
+        }
+
+        .avatar-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+        }
+
+        .placeholder-icon {
+            color: #ccc;
+            display: block;
+        }
+
+        /* Thin Plus Button - FIXED for mobile touch */
+        .upload-plus-btn {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            background: var(--primary-gradient);
+            width: 36px;
+            height: 36px;
+            min-width: 36px;
+            min-height: 36px;
+            border-radius: 50%;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            cursor: pointer;
+            border: 3px solid white;
+            font-weight: 300;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            touch-action: manipulation;
+        }
+
+        /* Form Styling - FIXED for mobile */
+        .form-container {
+            display: flex;
+            flex-direction: column;
+            gap: clamp(12px, 3vw, 18px);
+            width: 100%;
+            max-width: 650px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        /* FIXED: Better mobile labels */
+        label {
+            font-weight: 600;
+            font-size: clamp(0.9rem, 3vw, 1.1rem);
+            color: #000;
+            text-transform: uppercase;
+            display: block;
+            width: 100%;
+        }
+
+        /* FIXED: Better mobile inputs */
+        input, select, textarea {
+            width: 100%;
+            min-height: 50px;
+            background-color: var(--input-bg);
+            border: none;
+            border-radius: 8px;
+            padding: 0 15px;
+            font-size: 1rem;
+            outline: none;
+            -webkit-appearance: none;
+            appearance: none;
+            touch-action: manipulation;
+        }
+
+        /* FIXED: Prevent iOS zoom on focus */
+        input:focus, select:focus, textarea:focus {
+            font-size: 16px;
+            border: 2px solid var(--text-orange);
+        }
+
+        textarea {
+            height: 100px;
+            padding: 12px 15px;
+            resize: none;
+            line-height: 1.4;
+        }
+
+        .username-input {
+            display: flex;
+            align-items: center;
+            background: var(--input-bg);
+            border-radius: 8px;
+            padding-left: 15px;
+            height: 50px;
+        }
+
+        .username-input span {
+            color: var(--text-orange);
+            font-weight: 700;
+            margin-right: 8px;
+            font-size: 1.1rem;
+        }
+
+        .password-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        /* FIXED: Eye icon positioning and touch target */
+        .eye-icon {
+            position: absolute;
+            right: 12px;
+            cursor: pointer;
+            color: #666;
+            padding: 10px;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            touch-action: manipulation;
+        }
+
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
+        /* FIXED: Mobile buttons */
+        .btn {
+            width: 100%;
+            min-height: 56px;
+            padding: 16px;
+            border: none;
+            border-radius: 50px;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-transform: uppercase;
+            background: var(--primary-gradient);
+            transition: transform 0.2s, opacity 0.2s;
+            touch-action: manipulation;
+        }
+
+        /* FIXED: Mobile hover states */
+        @media (hover: hover) {
+            .btn:hover { transform: translateY(-2px); opacity: 0.9; }
+        }
+        
+        .btn:active {
+            transform: scale(0.98);
+            opacity: 0.8;
+        }
+
+        /* FIXED: Country dropdown styling */
+        select {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23ff5e3a' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            background-size: 16px;
+            padding-right: 40px;
+        }
+
+        /* NEW: Photo upload instructions */
+        .upload-hint {
+            font-size: 0.8rem;
+            color: #666;
+            margin-top: 5px;
+            text-align: center;
+            font-style: italic;
+        }
+
+        /* NEW: Password strength indicator */
+        .password-strength {
+            height: 4px;
+            background: #ddd;
+            border-radius: 2px;
+            margin-top: 5px;
+            overflow: hidden;
+        }
+        
+        .strength-bar {
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s, background 0.3s;
+        }
+
+        /* NEW: Error message styling */
+        .error-message {
+            color: #ff3b2f;
+            font-size: 0.85rem;
+            margin-top: 5px;
+            display: none;
+        }
+
+        /* NEW: Mobile keyboard avoidance */
+        @media (max-height: 700px) {
+            .registration-card {
+                max-height: 85vh;
+                margin-top: 10px;
+            }
+        }
+
+        /* NEW: Landscape orientation support */
+        @media (orientation: landscape) and (max-height: 600px) {
+            .registration-card {
+                max-height: 80vh;
+            }
+            
+            .form-group {
+                min-height: 60px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="registration-card">
+        <h1>User Registration</h1>
+        
+        <form id="regForm" class="form-container" novalidate>
+            
+            <div class="avatar-section">
+                <div class="avatar-wrapper" onclick="document.getElementById('avatarUpload').click()" role="button" aria-label="Upload profile photo">
+                    <div id="placeholder" class="placeholder-icon">
+                        <i data-lucide="user" size="60"></i>
+                    </div>
+                    <img id="preview" src="" alt="Avatar preview">
+                    
+                    <label for="avatarUpload" id="plusBtn" class="upload-plus-btn" aria-label="Change photo">
+                        <i data-lucide="plus" size="20"></i>
+                    </label>
+                    <input type="file" id="avatarUpload" accept="image/*" style="display:none">
+                </div>
+                <p style="font-size: 0.75rem; color: var(--text-orange); margin-top: 10px; font-weight: bold; letter-spacing: 1px;">SET PROFILE PHOTO</p>
+                <p class="upload-hint">Tap to upload (max 5MB)</p>
+            </div>
+
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <div class="username-input">
+                    <span>@</span>
+                    <input type="text" id="username" placeholder="traveler_name" required minlength="3" maxlength="20">
+                </div>
+                <div id="username-error" class="error-message"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="firstName">First Name:</label>
+                <input type="text" id="firstName" required>
+                <div id="firstName-error" class="error-message"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="lastName">Last Name:</label>
+                <input type="text" id="lastName" required>
+                <div id="lastName-error" class="error-message"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="travelerType">Traveler Type:</label>
+                <select id="travelerType" required>
+                    <option value="" disabled selected>Select Your Style</option>
+                    <option value="backpacker">Solo Backpacker</option>
+                    <option value="luxury">Luxury Seeker</option>
+                    <option value="foodie">Culinary / Foodie</option>
+                    <option value="adventure">Adventure / Hiker</option>
+                    <option value="digital-nomad">Digital Nomad</option>
+                </select>
+                <div id="travelerType-error" class="error-message"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="nationality">Nationality:</label>
+                <input type="text" id="nationality" list="countries" placeholder="Search Country..." required autocomplete="country">
+                <datalist id="countries">
+                    <option value="Filipino">Filipino</option>
+                    <option value="American">American</option>
+                    <option value="Japanese">Japanese</option>
+                    <option value="British">British</option>
+                    <option value="Canadian">Canadian</option>
+                    <option value="Australian">Australian</option>
+                    <option value="Korean">Korean</option>
+                    <option value="Chinese">Chinese</option>
+                    <option value="Indian">Indian</option>
+                    <option value="German">German</option>
+                    <option value="French">French</option>
+                    <option value="Spanish">Spanish</option>
+                </datalist>
+                <div id="nationality-error" class="error-message"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="bio">Travel Bio:</label>
+                <textarea id="bio" placeholder="Tell your followers about your travel dreams... (Max 200 characters)" maxlength="200"></textarea>
+                <div class="char-counter" style="text-align: right; font-size: 0.8rem; color: #666;">0/200</div>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" required autocomplete="email">
+                <div id="email-error" class="error-message"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="pass">Password:</label>
+                <div class="password-wrapper">
+                    <input type="password" id="pass" required minlength="8" autocomplete="new-password">
+                    <span class="eye-icon" onclick="togglePass('pass', this)" role="button" aria-label="Toggle password visibility">
+                        <i data-lucide="eye"></i>
+                    </span>
+                </div>
+                <div class="password-strength">
+                    <div class="strength-bar" id="strengthBar"></div>
+                </div>
+                <div id="password-error" class="error-message"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="confirmPass">Confirm Password:</label>
+                <div class="password-wrapper">
+                    <input type="password" id="confirmPass" required autocomplete="new-password">
+                    <span class="eye-icon" onclick="togglePass('confirmPass', this)" role="button" aria-label="Toggle password visibility">
+                        <i data-lucide="eye"></i>
+                    </span>
+                </div>
+                <div id="confirmPass-error" class="error-message"></div>
+            </div>
+
+            <div class="button-group">
+                <button type="button" class="btn" style="background: #ccc; color: #444;" onclick="history.back()">Back</button>
+                <button type="submit" class="btn" id="submitBtn">Sign Up</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        lucide.createIcons();
+        
+        // Prevent iOS zoom on input focus
+        document.addEventListener('touchstart', function() {}, {passive: true});
+
+        // Elements
+        const avatarUpload = document.getElementById('avatarUpload');
+        const preview = document.getElementById('preview');
+        const placeholder = document.getElementById('placeholder');
+        const plusBtn = document.getElementById('plusBtn');
+        const bioTextarea = document.getElementById('bio');
+        const charCounter = document.querySelector('.char-counter');
+        const strengthBar = document.getElementById('strengthBar');
+        const passwordInput = document.getElementById('pass');
+        const form = document.getElementById('regForm');
+        const submitBtn = document.getElementById('submitBtn');
+
+        // Avatar Preview with file size validation
+        avatarUpload.addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                // Check file size (max 5MB)
+                if (file.size > 5 * 1024 * 1024) {
+                    alert("File is too large! Maximum size is 5MB.");
+                    this.value = '';
+                    return;
+                }
+                
+                // Check file type
+                if (!file.type.startsWith('image/')) {
+                    alert("Please select an image file.");
+                    this.value = '';
+                    return;
+                }
+                
+                const reader = new FileReader();
+                reader.onload = function() {
+                    preview.src = reader.result;
+                    preview.style.display = "block";
+                    placeholder.style.display = "none";
+                    plusBtn.style.display = "flex";
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Password toggle function
+        function togglePass(inputId, iconElement) {
+            const input = document.getElementById(inputId);
+            const icon = iconElement.querySelector('i');
+            if (input.type === "password") {
+                input.type = "text";
+                icon.setAttribute('data-lucide', 'eye-off');
+            } else {
+                input.type = "password";
+                icon.setAttribute('data-lucide', 'eye');
+            }
+            lucide.createIcons();
+            iconElement.blur(); // Remove focus for mobile
+        }
+
+        // Character counter for bio
+        bioTextarea.addEventListener('input', function() {
+            const length = this.value.length;
+            charCounter.textContent = `${length}/200`;
+        });
+
+        // Password strength indicator
+        passwordInput.addEventListener('input', function() {
+            const password = this.value;
+            let strength = 0;
+            
+            if (password.length >= 8) strength += 25;
+            if (/[A-Z]/.test(password)) strength += 25;
+            if (/[0-9]/.test(password)) strength += 25;
+            if (/[^A-Za-z0-9]/.test(password)) strength += 25;
+            
+            strengthBar.style.width = `${strength}%`;
+            
+            // Color coding
+            if (strength < 50) {
+                strengthBar.style.background = '#ff3b2f';
+            } else if (strength < 75) {
+                strengthBar.style.background = '#ff954d';
+            } else {
+                strengthBar.style.background = '#4CAF50';
+            }
+        });
+
+        // Real-time validation
+        function showError(fieldId, message) {
+            const errorEl = document.getElementById(`${fieldId}-error`);
+            if (errorEl) {
+                errorEl.textContent = message;
+                errorEl.style.display = 'block';
+            }
+            return false;
+        }
+
+        function clearError(fieldId) {
+            const errorEl = document.getElementById(`${fieldId}-error`);
+            if (errorEl) {
+                errorEl.style.display = 'none';
+            }
+            return true;
+        }
+
+        // Field validations
+        document.getElementById('username').addEventListener('blur', function() {
+            if (!this.value || this.value.length < 3) {
+                showError('username', 'Username must be at least 3 characters');
+            } else if (!/^[a-zA-Z0-9_]+$/.test(this.value)) {
+                showError('username', 'Only letters, numbers, and underscores allowed');
+            } else {
+                clearError('username');
+            }
+        });
+
+        document.getElementById('email').addEventListener('blur', function() {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(this.value)) {
+                showError('email', 'Please enter a valid email address');
+            } else {
+                clearError('email');
+            }
+        });
+
+        document.getElementById('pass').addEventListener('blur', function() {
+            if (this.value.length < 8) {
+                showError('password', 'Password must be at least 8 characters');
+            } else {
+                clearError('password');
+            }
+        });
+
+        document.getElementById('confirmPass').addEventListener('input', function() {
+            const password = document.getElementById('pass').value;
+            if (this.value !== password) {
+                showError('confirmPass', 'Passwords do not match');
+            } else {
+                clearError('confirmPass');
+            }
+        });
+
+        // Form submission
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // Disable submit button
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Creating Account...';
+            
+            // Hide keyboard on submit
+            if (document.activeElement) {
+                document.activeElement.blur();
+            }
+            
+            // Simple validation
+            const password = document.getElementById('pass').value;
+            const confirmPass = document.getElementById('confirmPass').value;
+            
+            if (password !== confirmPass) {
+                showError('confirmPass', 'Passwords do not match');
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Sign Up';
+                return;
+            }
+            
+            // Simulate API call
+            setTimeout(() => {
+                alert("🎉 Account Registration Successful!\nWelcome to Travel Life Diary!");
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Sign Up';
+                // In a real app: form.reset() and redirect
+            }, 1500);
+        });
+
+        // Better touch handling for interactive elements
+        document.querySelectorAll('button, input, select, textarea, .avatar-wrapper, .eye-icon').forEach(el => {
+            el.addEventListener('touchstart', function() {
+                this.classList.add('touch-active');
+            });
+            
+            el.addEventListener('touchend', function() {
+                this.classList.remove('touch-active');
+            });
+        });
+    </script>
+</body>
+</html>

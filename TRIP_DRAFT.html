@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Drafts - Travel Life Diary</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,100..1000;1,100..1000&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #ff3b2f 0%, #ff954d 100%);
+            --text-orange: #ff6b3d;
+            --light-orange: #ffe8e0;
+            --dark-orange: #e55a35;
+            --green: #4CAF50;
+            --yellow: #FFC107;
+            --red: #f44336;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        body {
+            background: var(--primary-gradient);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: white;
+            width: 100%;
+            max-width: 700px;
+            border-radius: 40px;
+            padding: 35px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            max-height: 95vh;
+            overflow-y: auto;
+        }
+
+        /* Header */
+        .drafts-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid var(--light-orange);
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 30px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(255, 59, 47, 0.3);
+        }
+
+        .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 59, 47, 0.4);
+        }
+
+        .header-title {
+            color: var(--text-orange);
+            font-size: 26px;
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-align: center;
+            flex-grow: 1;
+        }
+
+        /* Draft Stats */
+        .draft-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: var(--light-orange);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            border: 3px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .stat-card.trips {
+            border-color: var(--text-orange);
+        }
+
+        .stat-card.journals {
+            border-color: var(--green);
+        }
+
+        .stat-card.all {
+            border-color: var(--yellow);
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .stat-card.trips .stat-value { color: var(--text-orange); }
+        .stat-card.journals .stat-value { color: var(--green); }
+        .stat-card.all .stat-value { color: var(--yellow); }
+
+        .stat-label {
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: #666;
+        }
+
+        /* Filter Tabs */
+        .draft-tabs {
+            display: flex;
+            background: #f5f5f5;
+            border-radius: 15px;
+            padding: 5px;
+            margin-bottom: 25px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            background: none;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 12px;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .tab-btn.active {
+            background: white;
+            color: var(--text-orange);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        /* Draft List */
+        .draft-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .draft-item {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            border: 3px solid #f0f0f0;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .draft-item:hover {
+            border-color: var(--text-orange);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(255, 107, 61, 0.1);
+        }
+
+        .draft-type {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--yellow);
+            color: white;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .draft-type.trip { background: var(--text-orange); }
+        .draft-type.journal { background: var(--green); }
+
+        .draft-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .draft-title {
+            color: var(--text-orange);
+            font-weight: 700;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .draft-progress {
+            background: #f0f0f0;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            color: #666;
+        }
+
+        .draft-meta {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .draft-meta span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .draft-preview {
+            color: #333;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            font-size: 14px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .draft-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .action-btn {
+            padding: 10px 25px;
+            border-radius: 25px;
+            border: none;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-width: 120px;
+            justify-content: center;
+        }
+
+        .action-btn.continue {
+            background: var(--primary-gradient);
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 59, 47, 0.3);
+        }
+
+        .action-btn.edit {
+            background: #f5f5f5;
+            color: #666;
+        }
+
+        .action-btn.delete {
+            background: #ffebee;
+            color: var(--red);
+            border: 2px solid #ffcdd2;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 59, 47, 0.2);
+        }
+
+        /* Empty State */
+        .empty-drafts {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+
+        .empty-drafts i {
+            font-size: 70px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .empty-drafts h3 {
+            color: var(--text-orange);
+            margin-bottom: 10px;
+        }
+
+        /* Bulk Actions */
+        .bulk-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid #eee;
+        }
+
+        .select-all {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            color: #666;
+            cursor: pointer;
+        }
+
+        .bulk-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .bulk-btn {
+            padding: 12px 25px;
+            border-radius: 25px;
+            border: none;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .bulk-btn.delete {
+            background: #ffebee;
+            color: var(--red);
+            border: 2px solid #ffcdd2;
+        }
+
+        .bulk-btn.delete:hover {
+            background: #ffcdd2;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+                border-radius: 30px;
+            }
+            
+            .draft-stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .draft-header {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .draft-actions {
+                flex-direction: column;
+            }
+            
+            .action-btn {
+                width: 100%;
+            }
+            
+            .bulk-actions {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .bulk-buttons {
+                width: 100%;
+            }
+            
+            .bulk-btn {
+                flex: 1;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Header -->
+    <div class="drafts-header">
+        <button class="back-btn" onclick="goBack()">
+            <i data-lucide="arrow-left"></i>
+            Back
+        </button>
+        
+        <h1 class="header-title">My Drafts</h1>
+        
+        <div style="width: 100px;"></div> <!-- Spacer -->
+    </div>
+
+    <!-- Draft Stats -->
+    <div class="draft-stats">
+        <div class="stat-card trips">
+            <div class="stat-value" id="tripDrafts">2</div>
+            <div class="stat-label">Trip Drafts</div>
+        </div>
+        
+        <div class="stat-card journals">
+            <div class="stat-value" id="journalDrafts">0</div>
+            <div class="stat-label">Journal Drafts</div>
+        </div>
+        
+        <div class="stat-card all">
+            <div class="stat-value" id="totalDrafts">2</div>
+            <div class="stat-label">Total Drafts</div>
+        </div>
+    </div>
+
+    <!-- Filter Tabs -->
+    <div class="draft-tabs">
+        <button class="tab-btn active" onclick="filterDrafts('all')">
+            <i data-lucide="grid"></i> All Drafts
+        </button>
+        <button class="tab-btn" onclick="filterDrafts('trips')">
+            <i data-lucide="plane"></i> Trip Drafts
+        </button>
+        <button class="tab-btn" onclick="filterDrafts('journals')">
+            <i data-lucide="book-open"></i> Journal Drafts
+        </button>
+    </div>
+
+    <!-- Draft List -->
+    <div class="draft-list" id="draftList">
+        <!-- Draft 1: Trip -->
+        <div class="draft-item">
+            <div class="draft-type trip">Trip Draft</div>
+            
+            <div class="draft-header">
+                <div class="draft-title">
+                    <i data-lucide="plane"></i>
+                    Palawan Island Hopping
+                </div>
+                <div class="draft-progress">65% Complete</div>
+            </div>
+            
+            <div class="draft-meta">
+                <span><i data-lucide="map-pin"></i> El Nido, Palawan</span>
+                <span><i data-lucide="calendar"></i> Last edited: 2 days ago</span>
+                <span><i data-lucide="file-text"></i> 3 sections filled</span>
+            </div>
+            
+            <div class="draft-preview">
+                Planning an amazing island hopping adventure in Palawan. Want to visit the Big Lagoon, Small Lagoon, and Secret Beach...
+            </div>
+            
+            <div class="draft-actions">
+                <button class="action-btn delete" onclick="deleteDraft('trip_101', this)">
+                    <i data-lucide="trash-2"></i> Delete
+                </button>
+                <button class="action-btn edit" onclick="editDraft('trip_101')">
+                    <i data-lucide="edit"></i> Edit
+                </button>
+                <button class="action-btn continue" onclick="continueDraft('trip_101')">
+                    <i data-lucide="play"></i> Continue
+                </button>
+            </div>
+        </div>
+
+        <!-- Draft 2: Trip -->
+        <div class="draft-item">
+            <div class="draft-type trip">Trip Draft</div>
+            
+            <div class="draft-header">
+                <div class="draft-title">
+                    <i data-lucide="utensils"></i>
+                    Cebu Food Trip
+                </div>
+                <div class="draft-progress">40% Complete</div>
+            </div>
+            
+            <div class="draft-meta">
+                <span><i data-lucide="map-pin"></i> Cebu City</span>
+                <span><i data-lucide="calendar"></i> Last edited: 1 week ago</span>
+                <span><i data-lucide="file-text"></i> 2 sections filled</span>
+            </div>
+            
+            <div class="draft-preview">
+                Trying famous Cebuano dishes like lechon, dried mangoes, and sutukil. Planning to visit Taboan Market for pasalubong...
+            </div>
+            
+            <div class="draft-actions">
+                <button class="action-btn delete" onclick="deleteDraft('trip_102', this)">
+                    <i data-lucide="trash-2"></i> Delete
+                </button>
+                <button class="action-btn edit" onclick="editDraft('trip_102')">
+                    <i data-lucide="edit"></i> Edit
+                </button>
+                <button class="action-btn continue" onclick="continueDraft('trip_102')">
+                    <i data-lucide="play"></i> Continue
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Empty State (hidden by default) -->
+    <div class="empty-drafts" id="emptyState" style="display: none;">
+        <i data-lucide="file-edit"></i>
+        <h3>No Drafts Found</h3>
+        <p>You don't have any saved drafts yet.</p>
+        <p style="font-size: 14px; margin-top: 10px; color: #666;">
+            Drafts are automatically saved when you click "Save as Draft"<br>
+            or leave a form without completing it.
+        </p>
+    </div>
+
+    <!-- Bulk Actions -->
+    <div class="bulk-actions" id="bulkActions" style="display: none;">
+        <div class="select-all" onclick="toggleSelectAll()">
+            <input type="checkbox" id="selectAll">
+            <label for="selectAll">Select All</label>
+        </div>
+        
+        <div class="bulk-buttons">
+            <button class="bulk-btn delete" onclick="deleteSelectedDrafts()">
+                <i data-lucide="trash-2"></i> Delete Selected
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Initialize icons
+    lucide.createIcons();
+    
+    // State
+    let allDrafts = [];
+    let currentFilter = 'all';
+    let selectedDrafts = new Set();
+    
+    // Load on page load
+    window.onload = function() {
+        loadDrafts();
+        updateStats();
+    };
+    
+    // Load drafts from localStorage
+    function loadDrafts() {
+        // Load trip drafts
+        const tripDrafts = JSON.parse(localStorage.getItem('tripDrafts') || '[]');
+        const journalDrafts = JSON.parse(localStorage.getItem('journalDrafts') || '{}');
+        
+        // Convert to unified format
+        allDrafts = [];
+        
+        // Add trip drafts
+        tripDrafts.forEach(draft => {
+            allDrafts.push({
+                id: `trip_${draft.id}`,
+                type: 'trip',
+                title: draft.name || 'Untitled Trip',
+                destination: draft.destination,
+                progress: draft.progress || 0,
+                lastEdited: draft.lastEdited || draft.savedAt,
+                preview: draft.description || 'No description',
+                data: draft
+            });
+        });
+        
+        // Add journal drafts (convert object to array)
+        Object.keys(journalDrafts).forEach(key => {
+            const draft = journalDrafts[key];
+            const parts = key.split('_');
+            
+            allDrafts.push({
+                id: `journal_${key}`,
+                type: 'journal',
+                title: draft.title || 'Untitled Journal',
+                destination: 'Journal Entry',
+                progress: 50, // Default progress for journals
+                lastEdited: draft.savedAt,
+                preview: draft.content || 'No content',
+                data: draft
+            });
+        });
+        
+        displayDrafts();
+    }
+    
+    // Display drafts based on filter
+    function displayDrafts() {
+        const container = document.getElementById('draftList');
+        const emptyState = document.getElementById('emptyState');
+        const bulkActions = document.getElementById('bulkActions');
+        
+        let filteredDrafts = allDrafts;
+        
+        // Apply filters
+        if (currentFilter === 'trips') {
+            filteredDrafts = allDrafts.filter(d => d.type === 'trip');
+        } else if (currentFilter === 'journals') {
+            filteredDrafts = allDrafts.filter(d => d.type === 'journal');
+        }
+        
+        // Sort by last edited (newest first)
+        filteredDrafts.sort((a, b) => new Date(b.lastEdited) - new Date(a.lastEdited));
+        
+        if (filteredDrafts.length === 0) {
+            container.innerHTML = '';
+            emptyState.style.display = 'block';
+            bulkActions.style.display = 'none';
+            return;
+        }
+        
+        emptyState.style.display = 'none';
+        bulkActions.style.display = 'flex';
+        
+        container.innerHTML = filteredDrafts.map(draft => `
+            <div class="draft-item" id="draft-${draft.id}">
+                <div class="draft-type ${draft.type}">
+                    ${draft.type === 'trip' ? 'Trip Draft' : 'Journal Draft'}
+                </div>
+                
+                <div class="draft-header">
+                    <div class="draft-title">
+                        <i data-lucide="${draft.type === 'trip' ? 'plane' : 'book-open'}"></i>
+                        ${draft.title}
+                    </div>
+                    <div class="draft-progress">${draft.progress}% Complete</div>
+                </div>
+                
+                <div class="draft-meta">
+                    <span><i data-lucide="map-pin"></i> ${draft.destination}</span>
+                    <span><i data-lucide="calendar"></i> ${formatRelativeTime(draft.lastEdited)}</span>
+                    <span><i data-lucide="file-text"></i> ${getSectionCount(draft)} sections</span>
+                </div>
+                
+                <div class="draft-preview">
+                    ${truncateText(draft.preview, 120)}
+                </div>
+                
+                <div class="draft-actions">
+                    <button class="action-btn delete" onclick="deleteDraft('${draft.id}', this)">
+                        <i data-lucide="trash-2"></i> Delete
+                    </button>
+                    <button class="action-btn edit" onclick="editDraft('${draft.id}')">
+                        <i data-lucide="edit"></i> Edit
+                    </button>
+                    <button class="action-btn continue" onclick="continueDraft('${draft.id}')">
+                        <i data-lucide="play"></i> Continue
+                    </button>
+                </div>
+            </div>
+        `).join('');
+        
+        // Reinitialize icons
+        lucide.createIcons();
+    }
+    
+    // Update statistics
+    function updateStats() {
+        const tripDrafts = allDrafts.filter(d => d.type === 'trip').length;
+        const journalDrafts = allDrafts.filter(d => d.type === 'journal').length;
+        const totalDrafts = allDrafts.length;
+        
+        document.getElementById('tripDrafts').textContent = tripDrafts;
+        document.getElementById('journalDrafts').textContent = journalDrafts;
+        document.getElementById('totalDrafts').textContent = totalDrafts;
+    }
+    
+    // Filter drafts
+    function filterDrafts(filterType) {
+        currentFilter = filterType;
+        
+        // Update active tab
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        event.target.classList.add('active');
+        
+        displayDrafts();
+    }
+    
+    // Draft actions
+    function continueDraft(draftId) {
+        const draft = allDrafts.find(d => d.id === draftId);
+        
+        if (draft.type === 'trip') {
+            // window.location.href = `ADD-TRIPS.html?draft=${draft.data.id}`;
+            alert(`Would continue trip draft: ${draft.title}`);
+        } else {
+            // window.location.href = `ADD-JOURNAL.html?draft=${draft.id}`;
+            alert(`Would continue journal draft: ${draft.title}`);
+        }
+    }
+    
+    function editDraft(draftId) {
+        // Similar to continue but might open in edit mode
+        continueDraft(draftId);
+    }
+    
+    function deleteDraft(draftId, button) {
+        if (!confirm('Delete this draft? This cannot be undone.')) {
+            return;
+        }
+        
+        const draft = allDrafts.find(d => d.id === draftId);
+        
+        // Remove from localStorage
+        if (draft.type === 'trip') {
+            let tripDrafts = JSON.parse(localStorage.getItem('tripDrafts') || '[]');
+            tripDrafts = tripDrafts.filter(d => d.id != draft.data.id);
+            localStorage.setItem('tripDrafts', JSON.stringify(tripDrafts));
+        } else {
+            let journalDrafts = JSON.parse(localStorage.getItem('journalDrafts') || '{}');
+            delete journalDrafts[draft.id.replace('journal_', '')];
+            localStorage.setItem('journalDrafts', JSON.stringify(journalDrafts));
+        }
+        
+        // Remove from UI
+        button.closest('.draft-item').remove();
+        
+        // Reload data
+        loadDrafts();
+        updateStats();
+        
+        alert('Draft deleted successfully!');
+    }
+    
+    // Bulk actions
+    function toggleSelectAll() {
+        const selectAll = document.getElementById('selectAll').checked;
+        selectedDrafts.clear();
+        
+        if (selectAll) {
+            allDrafts.forEach(draft => {
+                selectedDrafts.add(draft.id);
+            });
+        }
+    }
+    
+    function deleteSelectedDrafts() {
+        if (selectedDrafts.size === 0) {
+            alert('No drafts selected');
+            return;
+        }
+        
+        if (!confirm(`Delete ${selectedDrafts.size} selected draft(s)?`)) {
+            return;
+        }
+        
+        // Delete from localStorage
+        selectedDrafts.forEach(draftId => {
+            const draft = allDrafts.find(d => d.id === draftId);
+            
+            if (draft.type === 'trip') {
+                let tripDrafts = JSON.parse(localStorage.getItem('tripDrafts') || '[]');
+                tripDrafts = tripDrafts.filter(d => d.id != draft.data.id);
+                localStorage.setItem('tripDrafts', JSON.stringify(tripDrafts));
+            } else {
+                let journalDrafts = JSON.parse(localStorage.getItem('journalDrafts') || '{}');
+                delete journalDrafts[draft.id.replace('journal_', '')];
+                localStorage.setItem('journalDrafts', JSON.stringify(journalDrafts));
+            }
+        });
+        
+        // Reload
+        loadDrafts();
+        updateStats();
+        selectedDrafts.clear();
+        document.getElementById('selectAll').checked = false;
+        
+        alert(`${selectedDrafts.size} draft(s) deleted!`);
+    }
+    
+    // Helper functions
+    function formatRelativeTime(dateString) {
+        const date = new Date(dateString);
+        const now = new Date();
+        const diffMs = now - date;
+        const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+        
+        if (diffDays === 0) return 'Today';
+        if (diffDays === 1) return 'Yesterday';
+        if (diffDays < 7) return `${diffDays} days ago`;
+        if (diffDays < 30) return `${Math.floor(diffDays / 7)} weeks ago`;
+        return `${Math.floor(diffDays / 30)} months ago`;
+    }
+    
+    function truncateText(text, maxLength) {
+        if (!text) return 'No preview available';
+        if (text.length <= maxLength) return text;
+        return text.substr(0, maxLength) + '...';
+    }
+    
+    function getSectionCount(draft) {
+        if (draft.type === 'trip') {
+            // Count filled sections in trip draft
+            const sections = ['name', 'destination', 'startDate', 'region', 'tripType'];
+            return sections.filter(section => draft.data[section]).length;
+        } else {
+            // For journal drafts
+            const sections = ['content', 'mood', 'weather', 'locations', 'activities'];
+            return sections.filter(section => draft.data[section] && 
+                (Array.isArray(draft.data[section]) ? draft.data[section].length > 0 : draft.data[section])).length;
+        }
+    }
+    
+    // Navigation
+    function goBack() {
+        // window.location.href = 'TRIPS.html';
+        alert('Would go back to Trips page');
+    }
+</script>
+</body>
+</html>

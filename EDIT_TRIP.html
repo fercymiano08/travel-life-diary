@@ -1,0 +1,1294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Trip - Travel Life Diary</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,100..1000;1,100..1000&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #ff3b2f 0%, #ff954d 100%);
+            --text-orange: #ff6b3d;
+            --input-bg: #eeeeee;
+            --light-orange: #ffe8e0;
+            --green: #4CAF50;
+            --red: #ff3b2f;
+            --blue: #2196F3;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        body {
+            background: var(--primary-gradient);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+        }
+
+        .container {
+            background-color: white;
+            width: 100%;
+            max-width: 650px;
+            border-radius: 40px;
+            padding: 35px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            max-height: 95vh;
+            overflow-y: auto;
+        }
+
+        h1.main-title {
+            color: var(--text-orange);
+            font-size: 26px;
+            text-transform: uppercase;
+            margin-bottom: 25px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Edit Mode Header */
+        .edit-header {
+            background: var(--light-orange);
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-left: 5px solid var(--text-orange);
+        }
+
+        .edit-header p {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+
+        /* Progress Steps (Same as ADD TRIPS) */
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .progress-steps::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 10%;
+            right: 10%;
+            height: 3px;
+            background: #eee;
+            z-index: 1;
+        }
+
+        .step {
+            position: relative;
+            z-index: 2;
+            background: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: #999;
+            border: 3px solid #eee;
+        }
+
+        .step.active {
+            background: var(--primary-gradient);
+            color: white;
+            border-color: var(--text-orange);
+        }
+
+        .step-label {
+            position: absolute;
+            top: 35px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.7rem;
+            white-space: nowrap;
+            color: #999;
+            min-width: 80px;
+            text-align: center;
+        }
+
+        .step.active .step-label {
+            color: var(--text-orange);
+            font-weight: 600;
+        }
+
+        /* Form Sections */
+        .form-section {
+            position: relative;
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border: 5px solid;
+            border-image: var(--primary-gradient) 1;
+            display: none;
+        }
+
+        .form-section.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-title {
+            color: var(--text-orange);
+            font-size: 18px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-group { 
+            margin-bottom: 18px; 
+        }
+
+        label {
+            display: block;
+            color: var(--text-orange);
+            font-size: 14px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .required::after {
+            content: " *";
+            color: var(--red);
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 14px 15px;
+            background-color: var(--input-bg);
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            color: #333;
+            outline: none;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--text-orange);
+            background: white;
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        /* Budget Breakdown */
+        .budget-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .budget-item.total {
+            border-top: 2px solid var(--text-orange);
+            border-bottom: none;
+            font-weight: 700;
+            font-size: 16px;
+            color: var(--text-orange);
+            margin-top: 10px;
+            padding-top: 15px;
+        }
+
+        .budget-item input {
+            width: 150px;
+            text-align: right;
+            padding: 8px 12px;
+            font-size: 14px;
+        }
+
+        /* Checkbox/Radio Groups */
+        .checkbox-group, .radio-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .checkbox-group label, .radio-group label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            color: #333;
+            transition: background 0.2s;
+        }
+
+        .checkbox-group label:hover, .radio-group label:hover {
+            background: #f0f0f0;
+        }
+
+        .checkbox-group input, .radio-group input {
+            width: auto;
+        }
+
+        /* Tags Input */
+        .tags-input-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .tags-input-container input {
+            flex: 1;
+        }
+
+        .tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .tag {
+            background: var(--light-orange);
+            color: var(--text-orange);
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .tag-remove {
+            cursor: pointer;
+            font-size: 16px;
+            line-height: 1;
+            opacity: 0.7;
+        }
+
+        .tag-remove:hover {
+            opacity: 1;
+        }
+
+        /* Template Selector */
+        .template-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .template-card {
+            background: white;
+            border: 2px solid #eee;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .template-card:hover {
+            border-color: var(--text-orange);
+            transform: translateY(-2px);
+        }
+
+        .template-card.selected {
+            border-color: var(--text-orange);
+            background: var(--light-orange);
+        }
+
+        /* Photo Upload */
+        .image-upload-box {
+            min-height: 150px;
+            flex-direction: column;
+            gap: 12px;
+            border: 3px dashed #ccc;
+            border-radius: 10px;
+            padding: 25px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .image-upload-box:hover {
+            border-color: var(--text-orange);
+            background: #f9f9f9;
+        }
+
+        /* Navigation Buttons - MODIFIED FOR EDIT */
+        .form-navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid #eee;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border-radius: 30px;
+            border: none;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            min-width: 150px;
+        }
+
+        .btn-primary {
+            background: var(--primary-gradient);
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 59, 47, 0.3);
+        }
+
+        .btn-secondary {
+            background: #f5f5f5;
+            color: #666;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .btn-danger {
+            background: #ffebee;
+            color: #f44336;
+            border: 2px solid #ffcdd2;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 59, 47, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(1px);
+        }
+
+        /* Currency */
+        .currency-wrap {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .currency-wrap::before {
+            content: "₱";
+            position: absolute;
+            left: 15px;
+            font-weight: bold;
+            color: #555;
+            font-size: 16px;
+        }
+        .currency-wrap input { 
+            padding-left: 35px; 
+        }
+
+        /* Info Tooltip */
+        .info-tooltip {
+            color: #666;
+            font-size: 12px;
+            font-style: italic;
+            margin-top: 5px;
+        }
+
+        /* Helper Text */
+        .helper-text {
+            color: #666;
+            font-size: 13px;
+            margin-top: 5px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* Delete Confirmation */
+        .delete-confirm {
+            display: none;
+            background: #ffebee;
+            border: 2px solid #ffcdd2;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .delete-confirm.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1 class="main-title">
+        <i data-lucide="edit"></i> Edit Trip
+    </h1>
+
+    <!-- Edit Mode Header -->
+    <div class="edit-header">
+        <p><strong>✏️ Editing Trip:</strong> <span id="editingTripName">Vacation in Boracay</span></p>
+        <p><strong>📅 Last Modified:</strong> <span id="lastModified">March 10, 2024</span></p>
+        <p><strong>⚠️ Note:</strong> Changes will update all related journal entries and photos.</p>
+    </div>
+
+    <!-- Progress Steps -->
+    <div class="progress-steps">
+        <div class="step active" data-step="1">
+            1
+            <div class="step-label">Basic Info</div>
+        </div>
+        <div class="step" data-step="2">
+            2
+            <div class="step-label">Trip Details</div>
+        </div>
+        <div class="step" data-step="3">
+            3
+            <div class="step-label">Budget & Safety</div>
+        </div>
+        <div class="step" data-step="4">
+            4
+            <div class="step-label">Review Changes</div>
+        </div>
+    </div>
+
+    <form id="editTripForm">
+        <!-- SECTION 1: BASIC INFO -->
+        <div class="form-section active" id="section-1">
+            <h2 class="section-title"><i data-lucide="map-pin"></i> Basic Information</h2>
+            
+            <div class="form-group">
+                <label for="tripName" class="required">Trip Name</label>
+                <input type="text" id="tripName" placeholder="e.g.: Summer in Boracay" required>
+                <div class="helper-text"><i data-lucide="lightbulb"></i> Make it descriptive and memorable!</div>
+            </div>
+
+            <div class="form-group">
+                <label for="destination" class="required">Destination</label>
+                <input type="text" id="destination" list="ph-spots" placeholder="Type or select a Philippine tourist spot" required>
+                <datalist id="ph-spots">
+                    <option value="Boracay, Aklan">Boracay, Aklan (Visayas)</option>
+                    <option value="El Nido, Palawan">El Nido, Palawan (Palawan)</option>
+                    <option value="Siargao, Surigao del Norte">Siargao, Surigao del Norte (Mindanao)</option>
+                    <option value="Baguio City, Benguet">Baguio City, Benguet (Luzon)</option>
+                    <option value="Chocolate Hills, Bohol">Chocolate Hills, Bohol (Visayas)</option>
+                    <option value="Vigan, Ilocos Sur">Vigan, Ilocos Sur (Luzon)</option>
+                    <option value="Mayon Volcano, Albay">Mayon Volcano, Albay (Luzon)</option>
+                    <option value="Coron, Palawan">Coron, Palawan (Palawan)</option>
+                </datalist>
+            </div>
+
+            <div class="row">
+                <div class="form-group">
+                    <label for="startDate" class="required">Start Date</label>
+                    <input type="date" id="startDate" required>
+                </div>
+                <div class="form-group">
+                    <label for="endDate" class="required">End Date</label>
+                    <input type="date" id="endDate" required>
+                    <div class="info-tooltip" id="durationDisplay"></div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Quick Templates (Optional)</label>
+                <div class="template-cards">
+                    <div class="template-card" data-template="beach" onclick="selectTemplate('beach')">
+                        <i data-lucide="sun" style="color: #ff6b3d;"></i>
+                        <div style="margin-top: 8px; font-weight: 600;">🏖️ Beach Getaway</div>
+                    </div>
+                    <div class="template-card" data-template="mountain" onclick="selectTemplate('mountain')">
+                        <i data-lucide="mountain" style="color: #4CAF50;"></i>
+                        <div style="margin-top: 8px; font-weight: 600;">⛰️ Mountain Hike</div>
+                    </div>
+                    <div class="template-card" data-template="city" onclick="selectTemplate('city')">
+                        <i data-lucide="building" style="color: #2196F3;"></i>
+                        <div style="margin-top: 8px; font-weight: 600;">🏙️ City Tour</div>
+                    </div>
+                    <div class="template-card" data-template="food" onclick="selectTemplate('food')">
+                        <i data-lucide="utensils" style="color: #FF9800;"></i>
+                        <div style="margin-top: 8px; font-weight: 600;">🍜 Food Trip</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-navigation">
+                <button type="button" class="btn btn-secondary" onclick="cancelEdit()">
+                    <i data-lucide="x"></i> Cancel
+                </button>
+                <button type="button" class="btn btn-primary" onclick="nextSection()">
+                    Next <i data-lucide="arrow-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- SECTION 2: TRIP DETAILS -->
+        <div class="form-section" id="section-2">
+            <h2 class="section-title"><i data-lucide="settings"></i> Trip Details</h2>
+            
+            <div class="row">
+                <div class="form-group">
+                    <label for="region" class="required">Philippine Region</label>
+                    <select id="region" required>
+                        <option value="" disabled>Select Region</option>
+                        <optgroup label="🇱🇺 Luzon">
+                            <option value="NCR">NCR: Metro Manila</option>
+                            <option value="CAR">CAR: Cordillera</option>
+                            <option value="I">Region I: Ilocos</option>
+                            <option value="II">Region II: Cagayan Valley</option>
+                            <option value="III">Region III: Central Luzon</option>
+                            <option value="IV-A">Region IV-A: CALABARZON</option>
+                            <option value="IV-B">Region IV-B: MIMAROPA</option>
+                            <option value="V">Region V: Bicol</option>
+                        </optgroup>
+                        <optgroup label="🇻🇸 Visayas">
+                            <option value="VI">Region VI: Western Visayas</option>
+                            <option value="VII">Region VII: Central Visayas</option>
+                            <option value="VIII">Region VIII: Eastern Visayas</option>
+                        </optgroup>
+                        <optgroup label="🇲🇳 Mindanao">
+                            <option value="IX">Region IX: Zamboanga Peninsula</option>
+                            <option value="X">Region X: Northern Mindanao</option>
+                            <option value="XI">Region XI: Davao Region</option>
+                            <option value="XII">Region XII: SOCCSKSARGEN</option>
+                            <option value="XIII">Region XIII: Caraga</option>
+                            <option value="BARMM">BARMM: Bangsamoro</option>
+                        </optgroup>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="tripType" class="required">Trip Type</label>
+                    <select id="tripType" required>
+                        <option value="" disabled>Select type</option>
+                        <option value="beach">🏖️ Beach / Island Hopping</option>
+                        <option value="mountain">⛰️ Mountain / Hiking</option>
+                        <option value="cultural">🏛️ Cultural / Heritage</option>
+                        <option value="city">🏙️ City Exploration</option>
+                        <option value="food">🍜 Food Trip / Food Crawl</option>
+                        <option value="festival">🎉 Festival Experience</option>
+                        <option value="roadtrip">🚗 Road Trip</option>
+                        <option value="diving">🤿 Diving / Snorkeling</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="transport">Main Transportation in PH</label>
+                <select id="transport">
+                    <option value="">Select transport</option>
+                    <option value="jeepney">🚌 Jeepney</option>
+                    <option value="tricycle">🛺 Tricycle</option>
+                    <option value="bus">🚍 Bus</option>
+                    <option value="van">🚐 Van/FX</option>
+                    <option value="ferry">⛴️ Ferry/Boat</option>
+                    <option value="plane">✈️ Plane</option>
+                    <option value="car">🚗 Private Car</option>
+                    <option value="motorcycle">🏍️ Motorcycle</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="season">Travel Season in PH</label>
+                <select id="season">
+                    <option value="">Select season</option>
+                    <option value="dry">☀️ Dry Season (Nov-Apr)</option>
+                    <option value="wet">🌧️ Wet Season (May-Oct)</option>
+                    <option value="amihan">🍃 Amihan (NE Monsoon)</option>
+                    <option value="habagat">💨 Habagat (SW Monsoon)</option>
+                    <option value="christmas">🎄 Christmas Season</option>
+                    <option value="summer">🔥 Summer (Mar-May)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Travel Companions</label>
+                <div class="checkbox-group" id="companionsGroup">
+                    <label><input type="checkbox" value="solo"> 🧍 Solo Travel</label>
+                    <label><input type="checkbox" value="family"> 👨‍👩‍👧‍👦 With Family</label>
+                    <label><input type="checkbox" value="friends"> 👥 With Barkada</label>
+                    <label><input type="checkbox" value="couple"> 💑 With Partner</label>
+                    <label><input type="checkbox" value="group"> 🎯 Tour Group</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Packing List</label>
+                <div class="tags-input-container">
+                    <input type="text" id="packingInput" placeholder="Add item (e.g., swimwear, jacket)">
+                    <button type="button" class="btn-secondary" style="padding: 10px 20px;" onclick="addPackingItem()">Add</button>
+                </div>
+                <div class="tags-container" id="packingContainer">
+                    <!-- Items will appear here -->
+                </div>
+                <div class="helper-text"><i data-lucide="info"></i> Press Enter or click Add to include items</div>
+            </div>
+
+            <div class="form-navigation">
+                <button type="button" class="btn btn-secondary" onclick="prevSection()">
+                    <i data-lucide="arrow-left"></i> Back
+                </button>
+                <button type="button" class="btn btn-primary" onclick="nextSection()">
+                    Next <i data-lucide="arrow-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- SECTION 3: BUDGET & SAFETY -->
+        <div class="form-section" id="section-3">
+            <h2 class="section-title"><i data-lucide="wallet"></i> Budget & Safety</h2>
+            
+            <div class="form-group">
+                <label class="required">Budget Breakdown (₱)</label>
+                <div class="budget-item">
+                    <span>🚌 Transportation:</span>
+                    <input type="number" placeholder="0" class="budget-input" id="transportBudget" min="0">
+                </div>
+                <div class="budget-item">
+                    <span>🏨 Accommodation:</span>
+                    <input type="number" placeholder="0" class="budget-input" id="accomBudget" min="0">
+                </div>
+                <div class="budget-item">
+                    <span>🍜 Food:</span>
+                    <input type="number" placeholder="0" class="budget-input" id="foodBudget" min="0">
+                </div>
+                <div class="budget-item">
+                    <span>🎯 Activities:</span>
+                    <input type="number" placeholder="0" class="budget-input" id="activityBudget" min="0">
+                </div>
+                <div class="budget-item">
+                    <span>🛍️ Shopping:</span>
+                    <input type="number" placeholder="0" class="budget-input" id="shoppingBudget" min="0">
+                </div>
+                <div class="budget-item total">
+                    <strong>💰 Total Budget:</strong>
+                    <span id="totalBudget">₱0</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="travelers" class="required">Number of Travelers</label>
+                <input type="number" id="travelers" placeholder="1" min="1" max="50" required>
+                <div class="helper-text"><i data-lucide="users"></i> How many people are joining?</div>
+            </div>
+
+            <div class="form-group">
+                <label for="description">Trip Description</label>
+                <textarea rows="4" id="description" placeholder="What are you excited about? Any special plans or expectations?"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="emergencyName">Emergency Contact in PH</label>
+                <input type="text" id="emergencyName" placeholder="Contact person name">
+                <input type="tel" id="emergencyPhone" placeholder="Phone number (09xxxxxxxxx)" 
+                       pattern="[0-9]{11}" style="margin-top: 10px;">
+                <div class="helper-text"><i data-lucide="shield"></i> For safety purposes only</div>
+            </div>
+
+            <div class="form-group">
+                <label for="accommodation">Accommodation Address</label>
+                <input type="text" id="accommodation" placeholder="Hotel/Resort name and address">
+            </div>
+
+            <div class="form-navigation">
+                <button type="button" class="btn btn-secondary" onclick="prevSection()">
+                    <i data-lucide="arrow-left"></i> Back
+                </button>
+                <button type="button" class="btn btn-primary" onclick="nextSection()">
+                    Next <i data-lucide="arrow-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- SECTION 4: REVIEW & SAVE -->
+        <div class="form-section" id="section-4">
+            <h2 class="section-title"><i data-lucide="clipboard-check"></i> Review Changes</h2>
+            
+            <div class="edit-header" style="background: #e8f5e9; border-left-color: #4CAF50;">
+                <p><strong>✅ Ready to Update</strong></p>
+                <p>Review your changes below before saving.</p>
+            </div>
+
+            <!-- Change Summary -->
+            <div class="form-group">
+                <label>Changes Summary</label>
+                <div id="changeSummary" style="background: #f9f9f9; padding: 15px; border-radius: 8px; font-size: 14px;">
+                    <p><i data-lucide="check-circle" style="color: #4CAF50;"></i> No changes detected yet.</p>
+                </div>
+            </div>
+
+            <!-- Original vs New Comparison -->
+            <div class="form-group">
+                <label>What's Changing?</label>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 10px;">
+                    <div style="background: #fff3e0; padding: 15px; border-radius: 8px;">
+                        <h4 style="color: #ff9800; margin-bottom: 10px;">Original</h4>
+                        <div id="originalSummary">
+                            Loading original data...
+                        </div>
+                    </div>
+                    <div style="background: #e8f5e9; padding: 15px; border-radius: 8px;">
+                        <h4 style="color: #4CAF50; margin-bottom: 10px;">New Version</h4>
+                        <div id="newSummary">
+                            Loading new data...
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Delete Option (Only in Edit Mode) -->
+            <div class="delete-confirm" id="deleteConfirm">
+                <h3 style="color: #f44336; margin-bottom: 15px;"><i data-lucide="alert-triangle"></i> Delete This Trip?</h3>
+                <p style="margin-bottom: 15px;">This will permanently delete the trip and all associated journal entries and photos.</p>
+                <div style="display: flex; gap: 10px; justify-content: center;">
+                    <button type="button" class="btn btn-secondary" onclick="hideDeleteConfirm()">
+                        Cancel
+                    </button>
+                    <button type="button" class="btn btn-danger" onclick="confirmDeleteTrip()">
+                        <i data-lucide="trash-2"></i> Delete Forever
+                    </button>
+                </div>
+            </div>
+
+            <div class="form-navigation">
+                <button type="button" class="btn btn-secondary" onclick="prevSection()">
+                    <i data-lucide="arrow-left"></i> Back
+                </button>
+                
+                <button type="button" class="btn btn-danger" onclick="showDeleteConfirm()">
+                    <i data-lucide="trash-2"></i> Delete Trip
+                </button>
+                
+                <button type="button" class="btn btn-secondary" onclick="saveAsDraft()">
+                    <i data-lucide="save"></i> Save as Draft
+                </button>
+                
+                <button type="submit" class="btn btn-primary">
+                    <i data-lucide="check"></i> Update Trip
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    // Initialize icons
+    lucide.createIcons();
+    
+    // State management
+    let currentSection = 1;
+    let packingItems = [];
+    let selectedTemplate = null;
+    let originalTripData = null;
+    let tripId = null;
+    
+    // Get trip ID from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    tripId = urlParams.get('id') || 1;
+    
+    // Initialize on load
+    window.onload = function() {
+        loadTripData(tripId);
+        updateDurationDisplay();
+        
+        // Budget calculation
+        document.querySelectorAll('.budget-input').forEach(input => {
+            input.addEventListener('input', calculateTotalBudget);
+        });
+        
+        // Packing list input
+        document.getElementById('packingInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                addPackingItem();
+            }
+        });
+        
+        // Detect changes for summary
+        document.querySelectorAll('input, select, textarea').forEach(element => {
+            element.addEventListener('change', updateChangeSummary);
+        });
+    };
+    
+    // Load trip data for editing
+    function loadTripData(tripId) {
+        // Load from localStorage
+        const trips = JSON.parse(localStorage.getItem('travelTrips') || '[]');
+        const trip = trips.find(t => t.id == tripId) || getSampleTrip();
+        
+        // Save original data
+        originalTripData = JSON.parse(JSON.stringify(trip));
+        
+        // Update header
+        document.getElementById('editingTripName').textContent = trip.name;
+        document.getElementById('lastModified').textContent = trip.lastModified || 
+            new Date(trip.createdAt || Date.now()).toLocaleDateString('en-US', {
+                month: 'long',
+                day: 'numeric',
+                year: 'numeric'
+            });
+        
+        // Fill form fields
+        document.getElementById('tripName').value = trip.name;
+        document.getElementById('destination').value = trip.destination;
+        document.getElementById('startDate').value = trip.startDate || '';
+        document.getElementById('endDate').value = trip.endDate || '';
+        document.getElementById('region').value = trip.region || '';
+        document.getElementById('tripType').value = trip.tripType || '';
+        document.getElementById('transport').value = trip.transport || '';
+        document.getElementById('season').value = trip.season || '';
+        document.getElementById('travelers').value = trip.travelers || 1;
+        document.getElementById('description').value = trip.description || '';
+        document.getElementById('emergencyName').value = trip.safety?.emergencyName || '';
+        document.getElementById('emergencyPhone').value = trip.safety?.emergencyPhone || '';
+        document.getElementById('accommodation').value = trip.safety?.accommodation || '';
+        
+        // Budget
+        if (trip.budget) {
+            document.getElementById('transportBudget').value = trip.budget.transport || 0;
+            document.getElementById('accomBudget').value = trip.budget.accommodation || 0;
+            document.getElementById('foodBudget').value = trip.budget.food || 0;
+            document.getElementById('activityBudget').value = trip.budget.activities || 0;
+            document.getElementById('shoppingBudget').value = trip.budget.shopping || 0;
+            calculateTotalBudget();
+        }
+        
+        // Companions
+        if (trip.companions) {
+            trip.companions.forEach(companion => {
+                const checkbox = document.querySelector(`input[value="${companion}"]`);
+                if (checkbox) checkbox.checked = true;
+            });
+        }
+        
+        // Packing list
+        if (trip.packingList) {
+            packingItems = [...trip.packingList];
+            updatePackingDisplay();
+        }
+        
+        // Template
+        if (trip.template) {
+            selectTemplate(trip.template);
+        }
+        
+        // Update summaries
+        updateOriginalSummary();
+        updateNewSummary();
+    }
+    
+    function getSampleTrip() {
+        return {
+            id: 1,
+            name: "Vacation in Boracay",
+            destination: "Boracay, Aklan",
+            startDate: "2024-03-15",
+            endDate: "2024-03-20",
+            region: "VI",
+            tripType: "beach",
+            transport: "ferry",
+            season: "dry",
+            travelers: 2,
+            description: "White sand beach vacation with water activities",
+            budget: {
+                transport: 8000,
+                accommodation: 6000,
+                food: 3500,
+                activities: 2000,
+                shopping: 500
+            },
+            companions: ["couple"],
+            packingList: ["Swimwear", "Sunscreen", "Beach towel", "Flip flops"],
+            template: "beach",
+            safety: {
+                emergencyName: "Maria Santos",
+                emergencyPhone: "09123456789",
+                accommodation: "White Beach Resort, Station 1, Boracay"
+            },
+            createdAt: "2024-02-15T10:30:00Z"
+        };
+    }
+    
+    // Same functions as ADD TRIPS with modifications
+    function updateDurationDisplay() {
+        const start = new Date(document.getElementById('startDate').value);
+        const end = new Date(document.getElementById('endDate').value);
+        
+        if (start && end && start < end) {
+            const diffTime = Math.abs(end - start);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            document.getElementById('durationDisplay').textContent = `Duration: ${diffDays} day${diffDays > 1 ? 's' : ''}`;
+            
+            if (diffDays > 30) {
+                document.getElementById('durationDisplay').style.color = 'var(--red)';
+                document.getElementById('durationDisplay').innerHTML += ' ⚠️ Long trip!';
+            } else {
+                document.getElementById('durationDisplay').style.color = 'var(--green)';
+            }
+        }
+    }
+    
+    function calculateTotalBudget() {
+        let total = 0;
+        document.querySelectorAll('.budget-input').forEach(input => {
+            total += parseFloat(input.value) || 0;
+        });
+        document.getElementById('totalBudget').textContent = `₱${total.toLocaleString('en-PH')}`;
+        return total;
+    }
+    
+    function addPackingItem() {
+        const input = document.getElementById('packingInput');
+        const item = input.value.trim();
+        
+        if (item && !packingItems.includes(item)) {
+            packingItems.push(item);
+            updatePackingDisplay();
+            input.value = '';
+            updateChangeSummary();
+        }
+    }
+    
+    function updatePackingDisplay() {
+        const container = document.getElementById('packingContainer');
+        container.innerHTML = packingItems.map(item => `
+            <div class="tag">
+                ${item}
+                <span class="tag-remove" onclick="removePackingItem('${item}')">×</span>
+            </div>
+        `).join('');
+    }
+    
+    function removePackingItem(item) {
+        packingItems = packingItems.filter(i => i !== item);
+        updatePackingDisplay();
+        updateChangeSummary();
+    }
+    
+    function selectTemplate(template) {
+        selectedTemplate = template;
+        
+        document.querySelectorAll('.template-card').forEach(card => {
+            card.classList.remove('selected');
+        });
+        
+        const card = document.querySelector(`[data-template="${template}"]`);
+        if (card) card.classList.add('selected');
+        
+        updateChangeSummary();
+    }
+    
+    // Navigation
+    function nextSection() {
+        if (!validateCurrentSection()) return;
+        
+        document.getElementById(`section-${currentSection}`).classList.remove('active');
+        document.querySelector(`.step[data-step="${currentSection}"]`).classList.remove('active');
+        
+        currentSection++;
+        document.getElementById(`section-${currentSection}`).classList.add('active');
+        document.querySelector(`.step[data-step="${currentSection}"]`).classList.add('active');
+        
+        if (currentSection === 4) {
+            updateChangeSummary();
+            updateNewSummary();
+        }
+    }
+    
+    function prevSection() {
+        document.getElementById(`section-${currentSection}`).classList.remove('active');
+        document.querySelector(`.step[data-step="${currentSection}"]`).classList.remove('active');
+        
+        currentSection--;
+        document.getElementById(`section-${currentSection}`).classList.add('active');
+        document.querySelector(`.step[data-step="${currentSection}"]`).classList.add('active');
+    }
+    
+    function validateCurrentSection() {
+        if (currentSection === 1) {
+            const tripName = document.getElementById('tripName').value;
+            const destination = document.getElementById('destination').value;
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            
+            if (!tripName || !destination || !startDate || !endDate) {
+                alert('Please fill in all required fields');
+                return false;
+            }
+            
+            if (new Date(startDate) > new Date(endDate)) {
+                alert('End date must be after start date');
+                return false;
+            }
+        } else if (currentSection === 2) {
+            const region = document.getElementById('region').value;
+            const tripType = document.getElementById('tripType').value;
+            
+            if (!region || !tripType) {
+                alert('Please select region and trip type');
+                return false;
+            }
+        } else if (currentSection === 3) {
+            const travelers = document.getElementById('travelers').value;
+            
+            if (!travelers || travelers < 1) {
+                alert('Please enter number of travelers');
+                return false;
+            }
+        }
+        
+        return true;
+    }
+    
+    // Edit-specific functions
+    function updateChangeSummary() {
+        const summary = document.getElementById('changeSummary');
+        const changes = detectChanges();
+        
+        if (changes.length === 0) {
+            summary.innerHTML = '<p><i data-lucide="check-circle" style="color: #4CAF50;"></i> No changes detected.</p>';
+            return;
+        }
+        
+        summary.innerHTML = `
+            <p><i data-lucide="alert-circle" style="color: #ff9800;"></i> <strong>${changes.length} change${changes.length > 1 ? 's' : ''} detected:</strong></p>
+            <ul style="margin-left: 20px; margin-top: 10px;">
+                ${changes.map(change => `<li>${change}</li>`).join('')}
+            </ul>
+        `;
+    }
+    
+    function detectChanges() {
+        const changes = [];
+        const newData = collectTripData();
+        
+        // Compare with original
+        if (newData.name !== originalTripData.name) {
+            changes.push(`Trip name: "${originalTripData.name}" → "${newData.name}"`);
+        }
+        
+        if (newData.destination !== originalTripData.destination) {
+            changes.push(`Destination changed`);
+        }
+        
+        if (newData.startDate !== originalTripData.startDate) {
+            changes.push(`Dates updated`);
+        }
+        
+        if (newData.tripType !== originalTripData.tripType) {
+            changes.push(`Trip type changed`);
+        }
+        
+        if (newData.travelers !== originalTripData.travelers) {
+            changes.push(`Travelers: ${originalTripData.travelers || 1} → ${newData.travelers}`);
+        }
+        
+        const oldBudget = originalTripData.totalBudget || 
+            (originalTripData.budget ? 
+                Object.values(originalTripData.budget).reduce((a, b) => a + b, 0) : 0);
+        const newBudget = calculateTotalBudget();
+        
+        if (Math.abs(oldBudget - newBudget) > 0.01) {
+            changes.push(`Budget: ₱${oldBudget.toLocaleString('en-PH')} → ₱${newBudget.toLocaleString('en-PH')}`);
+        }
+        
+        return changes;
+    }
+    
+    function updateOriginalSummary() {
+        const summary = document.getElementById('originalSummary');
+        summary.innerHTML = `
+            <p><strong>${originalTripData.name}</strong></p>
+            <p>${originalTripData.destination}</p>
+            <p>${formatDate(originalTripData.startDate)} - ${formatDate(originalTripData.endDate)}</p>
+            <p>${originalTripData.travelers} traveler${originalTripData.travelers > 1 ? 's' : ''}</p>
+            <p>${originalTripData.tripType ? originalTripData.tripType.charAt(0).toUpperCase() + originalTripData.tripType.slice(1) : ''}</p>
+        `;
+    }
+    
+    function updateNewSummary() {
+        const newData = collectTripData();
+        const summary = document.getElementById('newSummary');
+        summary.innerHTML = `
+            <p><strong>${newData.name}</strong></p>
+            <p>${newData.destination}</p>
+            <p>${formatDate(newData.startDate)} - ${formatDate(newData.endDate)}</p>
+            <p>${newData.travelers} traveler${newData.travelers > 1 ? 's' : ''}</p>
+            <p>${newData.tripType ? newData.tripType.charAt(0).toUpperCase() + newData.tripType.slice(1) : ''}</p>
+        `;
+    }
+    
+    function formatDate(dateString) {
+        if (!dateString) return 'Not set';
+        const date = new Date(dateString);
+        return date.toLocaleDateString('en-US', { 
+            month: 'short', 
+            day: 'numeric' 
+        });
+    }
+    
+    // Form submission
+    document.getElementById('editTripForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        updateTrip();
+    });
+    
+    function updateTrip() {
+        if (!validateCurrentSection()) return;
+        
+        const tripData = collectTripData();
+        tripData.id = tripId;
+        tripData.updatedAt = new Date().toISOString();
+        tripData.lastModified = new Date().toLocaleDateString('en-US', {
+            month: 'long',
+            day: 'numeric',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+        
+        // Update in localStorage
+        let trips = JSON.parse(localStorage.getItem('travelTrips') || '[]');
+        const index = trips.findIndex(t => t.id == tripId);
+        
+        if (index !== -1) {
+            // Preserve some original data
+            tripData.createdAt = trips[index].createdAt;
+            tripData.journalEntries = trips[index].journalEntries || [];
+            tripData.photos = trips[index].photos || [];
+            
+            trips[index] = tripData;
+            localStorage.setItem('travelTrips', JSON.stringify(trips));
+            
+            alert(`✅ Trip "${tripData.name}" updated successfully!`);
+            
+            // Redirect back to trip details
+            setTimeout(() => {
+                // window.location.href = `TRIP-DETAILS.html?id=${tripId}`;
+                alert('Would redirect to trip details');
+            }, 1000);
+        } else {
+            alert('Error: Trip not found');
+        }
+    }
+    
+    function saveAsDraft() {
+        const tripData = collectTripData();
+        tripData.id = tripId;
+        tripData.status = 'draft';
+        tripData.savedAt = new Date().toISOString();
+        
+        alert('✅ Changes saved as draft!');
+        console.log('Draft saved:', tripData);
+    }
+    
+    function collectTripData() {
+        const start = new Date(document.getElementById('startDate').value);
+        const end = new Date(document.getElementById('endDate').value);
+        const diffDays = Math.ceil((end - start) / (1000 * 60 * 60 * 24));
+        
+        // Get checked companions
+        const companions = Array.from(document.querySelectorAll('.checkbox-group input:checked'))
+            .map(cb => cb.value);
+        
+        return {
+            name: document.getElementById('tripName').value,
+            destination: document.getElementById('destination').value,
+            startDate: document.getElementById('startDate').value,
+            endDate: document.getElementById('endDate').value,
+            duration: diffDays,
+            region: document.getElementById('region').value,
+            tripType: document.getElementById('tripType').value,
+            transport: document.getElementById('transport').value,
+            season: document.getElementById('season').value,
+            travelers: parseInt(document.getElementById('travelers').value),
+            description: document.getElementById('description').value,
+            budget: {
+                transport: parseFloat(document.getElementById('transportBudget').value) || 0,
+                accommodation: parseFloat(document.getElementById('accomBudget').value) || 0,
+                food: parseFloat(document.getElementById('foodBudget').value) || 0,
+                activities: parseFloat(document.getElementById('activityBudget').value) || 0,
+                shopping: parseFloat(document.getElementById('shoppingBudget').value) || 0
+            },
+            companions: companions,
+            packingList: packingItems,
+            safety: {
+                emergencyName: document.getElementById('emergencyName').value,
+                emergencyPhone: document.getElementById('emergencyPhone').value,
+                accommodation: document.getElementById('accommodation').value
+            },
+            template: selectedTemplate
+        };
+    }
+    
+    // Delete functions
+    function showDeleteConfirm() {
+        document.getElementById('deleteConfirm').classList.add('active');
+    }
+    
+    function hideDeleteConfirm() {
+        document.getElementById('deleteConfirm').classList.remove('active');
+    }
+    
+    function confirmDeleteTrip() {
+        if (confirm('Are you absolutely sure? This cannot be undone!')) {
+            // Delete from localStorage
+            let trips = JSON.parse(localStorage.getItem('travelTrips') || '[]');
+            trips = trips.filter(t => t.id != tripId);
+            localStorage.setItem('travelTrips', JSON.stringify(trips));
+            
+            // Also delete related journal entries
+            let entries = JSON.parse(localStorage.getItem('journalEntries') || '[]');
+            entries = entries.filter(e => e.tripId != tripId);
+            localStorage.setItem('journalEntries', JSON.stringify(entries));
+            
+            alert('🗑️ Trip deleted successfully!');
+            
+            // Redirect to trips list
+            setTimeout(() => {
+                // window.location.href = 'TRIPS.html';
+                alert('Would redirect to trips list');
+            }, 1000);
+        }
+    }
+    
+    function cancelEdit() {
+        if (confirm('Cancel editing? Any unsaved changes will be lost.')) {
+            // window.location.href = `TRIP-DETAILS.html?id=${tripId}`;
+            alert('Would go back to trip details');
+        }
+    }
+</script>
+</body>
+</html>

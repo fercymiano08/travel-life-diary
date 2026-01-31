@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Buddies - Travel Life Diary</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #ff3b2f 0%, #ff954d 100%);
+            --text-main: #1a1a1a;
+            --text-orange: #ff5e3a;
+            --bg-light: #f8fafc;
+            --status-green: #22c55e;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'DM Sans', sans-serif; }
+
+        body {
+            height: 100vh;
+            background: var(--primary-gradient);
+            display: flex; justify-content: center; align-items: center;
+            padding: 20px; overflow: hidden;
+        }
+
+        /* 850px Container */
+        .friends-container {
+            background: white;
+            width: 100%;
+            max-width: 850px;
+            height: 90vh;
+            border-radius: 40px;
+            display: flex; flex-direction: column;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.25);
+            position: relative; overflow: hidden;
+        }
+
+        /* Header */
+        .header {
+            padding: 25px 35px;
+            display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .back-btn {
+            display: flex; align-items: center; gap: 8px;
+            text-decoration: none; color: #444; font-weight: 700;
+            font-size: 0.85rem; background: #f5f5f5; 
+            padding: 10px 18px; border-radius: 15px; transition: 0.2s;
+        }
+        .back-btn:hover { background: #eee; transform: translateX(-3px); }
+
+        .search-box {
+            position: relative; flex: 1; margin: 0 25px;
+        }
+        .search-box input {
+            width: 100%; padding: 12px 15px 12px 45px;
+            border-radius: 15px; border: 1px solid #eee;
+            background: #f9f9f9; outline: none;
+        }
+        .search-box i { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #bbb; }
+
+        /* Scrollable Content */
+        .content {
+            flex: 1; overflow-y: auto; padding: 30px;
+            background: var(--bg-light);
+        }
+        .content::-webkit-scrollbar { width: 5px; }
+        .content::-webkit-scrollbar-thumb { background: #ddd; border-radius: 10px; }
+
+        /* Requests Section */
+        .requests-card {
+            background: white; border-radius: 25px; padding: 20px;
+            margin-bottom: 30px; border: 1px solid #ffe8e0;
+            box-shadow: 0 10px 20px rgba(255, 94, 58, 0.05);
+        }
+        .requests-card h3 { font-size: 0.9rem; color: var(--text-orange); margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; }
+
+        /* Friend Item Component */
+        .friend-row {
+            display: flex; align-items: center; justify-content: space-between;
+            background: white; padding: 15px 20px; border-radius: 20px;
+            margin-bottom: 12px; border: 1px solid #f0f0f0;
+            transition: 0.2s;
+        }
+        .friend-row:hover { border-color: var(--text-orange); transform: scale(1.01); }
+
+        .friend-info { display: flex; align-items: center; gap: 15px; }
+        .avatar-wrap { position: relative; }
+        .avatar { width: 55px; height: 55px; border-radius: 18px; object-fit: cover; }
+        .status-dot { 
+            position: absolute; bottom: -2px; right: -2px; 
+            width: 14px; height: 14px; border-radius: 50%;
+            background: var(--status-green); border: 3px solid white;
+        }
+
+        .details h4 { font-size: 1rem; color: var(--text-main); }
+        .details p { font-size: 0.75rem; color: #888; }
+        .on-trip { color: var(--text-orange) !important; font-weight: 700; }
+
+        .btn-group { display: flex; gap: 8px; }
+        .action-btn {
+            padding: 8px 15px; border-radius: 12px; border: none;
+            font-size: 0.8rem; font-weight: 700; cursor: pointer;
+            transition: 0.2s; display: flex; align-items: center; gap: 5px;
+        }
+        .btn-accept { background: var(--primary-gradient); color: white; }
+        .btn-msg { background: #f0f0f0; color: #444; }
+        .btn-msg:hover { background: #e0e0e0; }
+
+        .section-title { font-size: 1.2rem; font-weight: 800; margin: 20px 0 15px 5px; color: #333; }
+
+    </style>
+</head>
+<body>
+
+    <div class="friends-container">
+        <header class="header">
+            <a href="DASHBOARD.html" class="back-btn">
+                <i data-lucide="chevron-left" size="18"></i>
+                <span>BACK</span>
+            </a>
+            <div class="search-box">
+                <i data-lucide="search" size="18"></i>
+                <input type="text" placeholder="Search friends by name or location...">
+            </div>
+            <i data-lucide="user-plus" style="color: var(--text-orange); cursor: pointer;"></i>
+        </header>
+
+        <div class="content">
+            
+            <div class="requests-card">
+                <h3>New Invites (2)</h3>
+                <div class="friend-row">
+                    <div class="friend-info">
+                        <img src="https://i.pravatar.cc/150?u=a33" class="avatar">
+                        <div class="details">
+                            <h4>Miguel Santos</h4>
+                            <p>From Manila • 12 Mutual Friends</p>
+                        </div>
+                    </div>
+                    <div class="btn-group">
+                        <button class="action-btn btn-accept">Accept</button>
+                        <button class="action-btn" style="background:#f5f5f5; color:#999;">Decline</button>
+                    </div>
+                </div>
+            </div>
+
+            <h2 class="section-title">My Travel Buddies</h2>
+
+            <div class="friend-row">
+                <div class="friend-info">
+                    <div class="avatar-wrap">
+                        <img src="https://i.pravatar.cc/150?u=a12" class="avatar">
+                        <div class="status-dot"></div>
+                    </div>
+                    <div class="details">
+                        <h4>Bea Alonzo</h4>
+                        <p class="on-trip">📍 Currently in El Nido, Palawan</p>
+                    </div>
+                </div>
+                <button class="action-btn btn-msg"><i data-lucide="message-square" size="14"></i> Chat</button>
+            </div>
+
+            <div class="friend-row">
+                <div class="friend-info">
+                    <div class="avatar-wrap">
+                        <img src="https://i.pravatar.cc/150?u=a18" class="avatar">
+                    </div>
+                    <div class="details">
+                        <h4>Rico Blanco</h4>
+                        <p>Last seen: 2 hours ago • Baguio City</p>
+                    </div>
+                </div>
+                <button class="action-btn btn-msg"><i data-lucide="message-square" size="14"></i> Chat</button>
+            </div>
+
+            <div class="friend-row">
+                <div class="friend-info">
+                    <div class="avatar-wrap">
+                        <img src="https://i.pravatar.cc/150?u=a9" class="avatar">
+                        <div class="status-dot"></div>
+                    </div>
+                    <div class="details">
+                        <h4>Catriona Gray</h4>
+                        <p>Traveler Level: Elite • 84 Journeys</p>
+                    </div>
+                </div>
+                <button class="action-btn btn-msg"><i data-lucide="message-square" size="14"></i> Chat</button>
+            </div>
+
+            <div class="friend-row">
+                <div class="friend-info">
+                    <div class="avatar-wrap">
+                        <img src="https://i.pravatar.cc/150?u=a21" class="avatar">
+                    </div>
+                    <div class="details">
+                        <h4>Paolo Tuan</h4>
+                        <p>Backpacker • Joined March 2024</p>
+                    </div>
+                </div>
+                <button class="action-btn btn-msg"><i data-lucide="message-square" size="14"></i> Chat</button>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        // Simple Accept Interaction
+        document.querySelectorAll('.btn-accept').forEach(btn => {
+            btn.addEventListener('click', function() {
+                this.textContent = "Accepted!";
+                this.style.background = "#22c55e";
+                this.closest('.friend-row').style.opacity = '0.7';
+            });
+        });
+    </script>
+</body>
+</html>

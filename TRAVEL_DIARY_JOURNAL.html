@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Journals - Travel Life Diary</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,100..1000;1,100..1000&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #ff3b2f 0%, #ff954d 100%);
+            --text-orange: #ff6b3d;
+            --light-orange: #ffe8e0;
+            --dark-orange: #e55a35;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        body {
+            background: var(--primary-gradient);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: white;
+            width: 100%;
+            max-width: 650px;
+            border-radius: 40px;
+            padding: 35px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            max-height: 95vh;
+            overflow-y: auto;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid var(--light-orange);
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 30px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(255, 59, 47, 0.3);
+        }
+
+        .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 59, 47, 0.4);
+        }
+
+        .page-title {
+            color: var(--text-orange);
+            font-size: 26px;
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-align: center;
+            flex-grow: 1;
+        }
+
+        .add-btn {
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 30px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(255, 59, 47, 0.3);
+        }
+
+        .add-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 59, 47, 0.4);
+        }
+
+        /* Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .stat-box {
+            background: var(--primary-gradient);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            color: white;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            opacity: 0.9;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        /* Filter Bar */
+        .filter-bar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            background: #f5f5f5;
+            color: #666;
+            border: 2px solid #eee;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .filter-btn:hover {
+            background: #eee;
+        }
+
+        .filter-btn.active {
+            background: var(--primary-gradient);
+            color: white;
+            border-color: var(--text-orange);
+        }
+
+        /* Journal List */
+        .journal-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .journal-card {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            border: 3px solid #f0f0f0;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .journal-card:hover {
+            border-color: var(--text-orange);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(255, 107, 61, 0.1);
+        }
+
+        .journal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .journal-date {
+            color: var(--text-orange);
+            font-weight: 700;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .journal-mood {
+            font-size: 24px;
+            background: #f9f9f9;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .journal-trip {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .journal-content {
+            color: #333;
+            line-height: 1.6;
+            margin-bottom: 15px;
+    
+        /* Standard line-clamp with fallbacks */
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+    
+        /* For Firefox and other browsers */
+            display: -moz-box;
+            -moz-box-orient: vertical;
+            -moz-line-clamp: 3;
+    
+        /* Standard (future) */
+            display: box;
+            box-orient: vertical;
+            line-clamp: 3;
+        }
+
+        .journal-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .journal-meta {
+            display: flex;
+            gap: 15px;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .journal-meta span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .journal-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-btn {
+            background: none;
+            border: none;
+            color: #666;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 50%;
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .action-btn:hover {
+            background: #f5f5f5;
+            color: var(--text-orange);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 50px 20px;
+            color: #999;
+        }
+
+        .empty-state i {
+            font-size: 60px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .empty-state h3 {
+            color: var(--text-orange);
+            margin-bottom: 10px;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+                border-radius: 30px;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .journal-header {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .journal-footer {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Header -->
+    <div class="header">
+        <button class="back-btn" onclick="goToDashboard()">
+            <i data-lucide="arrow-left"></i>
+            Back
+        </button>
+        
+        <h1 class="page-title">My Journals</h1>
+        
+        <button class="add-btn" onclick="addNewJournal()">
+            <i data-lucide="plus"></i>
+            New Entry
+        </button>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-grid">
+        <div class="stat-box">
+            <div class="stat-value" id="totalEntries">0</div>
+            <div class="stat-label">Total Entries</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-value" id="thisMonth">0</div>
+            <div class="stat-label">This Month</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-value" id="totalWords">0</div>
+            <div class="stat-label">Total Words</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-value" id="withPhotos">0</div>
+            <div class="stat-label">With Photos</div>
+        </div>
+    </div>
+
+    <!-- Filter Bar -->
+    <div class="filter-bar">
+        <button class="filter-btn active" onclick="filterJournals('all')">
+            <i data-lucide="grid"></i> All
+        </button>
+        <button class="filter-btn" onclick="filterJournals('recent')">
+            <i data-lucide="clock"></i> Recent
+        </button>
+        <button class="filter-btn" onclick="filterJournals('favorites')">
+            <i data-lucide="heart"></i> Favorites
+        </button>
+        <button class="filter-btn" onclick="filterJournals('byTrip')">
+            <i data-lucide="plane"></i> By Trip
+        </button>
+        <button class="filter-btn" onclick="filterJournals('withPhotos')">
+            <i data-lucide="camera"></i> With Photos
+        </button>
+    </div>
+
+    <!-- Journal List -->
+    <div class="journal-list" id="journalList">
+        <!-- Journals will be loaded here -->
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-state" id="emptyState" style="display: none;">
+        <i data-lucide="book-open"></i>
+        <h3>No Journal Entries Yet</h3>
+        <p>Start documenting your travel memories!</p>
+        <p style="font-size: 14px; margin-top: 10px; color: #666;">
+            Your daily experiences, thoughts, and photos will appear here.
+        </p>
+        <button class="add-btn" style="margin-top: 20px;" onclick="addNewJournal()">
+            <i data-lucide="plus"></i> Create Your First Entry
+        </button>
+    </div>
+</div>
+
+<script>
+    // Initialize icons
+    lucide.createIcons();
+    
+    // State
+    let journals = [];
+    let currentFilter = 'all';
+    
+    // Load on page load
+    window.onload = function() {
+        loadJournals();
+        updateStats();
+    };
+    
+    // Load journals from localStorage
+    function loadJournals() {
+        journals = JSON.parse(localStorage.getItem('dailyJournalEntries') || '[]');
+        
+        // If no journals, load sample data
+        if (journals.length === 0) {
+            journals = getSampleJournals();
+            localStorage.setItem('dailyJournalEntries', JSON.stringify(journals));
+        }
+        
+        displayJournals();
+    }
+    
+    // Display journals based on filter
+    function displayJournals() {
+        const container = document.getElementById('journalList');
+        const emptyState = document.getElementById('emptyState');
+        
+        let filteredJournals = journals;
+        
+        // Apply filters
+        switch(currentFilter) {
+            case 'recent':
+                filteredJournals = journals.slice(0, 5); // Last 5
+                break;
+            case 'favorites':
+                filteredJournals = journals.filter(j => j.isFavorite);
+                break;
+            case 'withPhotos':
+                filteredJournals = journals.filter(j => j.photos > 0);
+                break;
+            case 'byTrip':
+                // Group by trip (would need trip selection UI)
+                break;
+        }
+        
+        // Sort by date (newest first)
+        filteredJournals.sort((a, b) => new Date(b.date) - new Date(a.date));
+        
+        if (filteredJournals.length === 0) {
+            container.innerHTML = '';
+            emptyState.style.display = 'block';
+            return;
+        }
+        
+        emptyState.style.display = 'none';
+        
+        container.innerHTML = filteredJournals.map(journal => `
+            <div class="journal-card" onclick="viewJournal('${journal.id}')">
+                <div class="journal-header">
+                    <div class="journal-date">
+                        <i data-lucide="calendar"></i>
+                        ${formatDate(journal.date)}
+                    </div>
+                    <div class="journal-mood">
+                        ${getMoodEmoji(journal.mood)}
+                    </div>
+                </div>
+                
+                <div class="journal-trip">
+                    <i data-lucide="map-pin"></i>
+                    ${journal.tripName || 'Unknown Trip'}
+                </div>
+                
+                <div class="journal-content">
+                    ${journal.content.length > 200 ? journal.content.substring(0, 200) + '...' : journal.content}
+                </div>
+                
+                <div class="journal-footer">
+                    <div class="journal-meta">
+                        <span><i data-lucide="image"></i> ${journal.photos || 0} photos</span>
+                        <span><i data-lucide="file-text"></i> ${journal.wordCount || 0} words</span>
+                        <span><i data-lucide="cloud"></i> ${journal.weather ? getWeatherEmoji(journal.weather) : '☀️'}</span>
+                    </div>
+                    
+                    <div class="journal-actions">
+                        <button class="action-btn" onclick="event.stopPropagation(); toggleFavorite('${journal.id}')">
+                            <i data-lucide="${journal.isFavorite ? 'heart' : 'heart'}" 
+                               style="${journal.isFavorite ? 'fill: #ff3b2f; color: #ff3b2f;' : ''}"></i>
+                        </button>
+                        <button class="action-btn" onclick="event.stopPropagation(); editJournal('${journal.id}')">
+                            <i data-lucide="edit"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+        
+        // Reinitialize icons
+        lucide.createIcons();
+    }
+    
+    // Update statistics
+    function updateStats() {
+        const totalEntries = journals.length;
+        const thisMonth = journals.filter(j => {
+            const journalDate = new Date(j.date);
+            const now = new Date();
+            return journalDate.getMonth() === now.getMonth() && 
+                   journalDate.getFullYear() === now.getFullYear();
+        }).length;
+        
+        const totalWords = journals.reduce((sum, j) => sum + (j.wordCount || 0), 0);
+        const withPhotos = journals.filter(j => j.photos > 0).length;
+        
+        document.getElementById('totalEntries').textContent = totalEntries;
+        document.getElementById('thisMonth').textContent = thisMonth;
+        document.getElementById('totalWords').textContent = totalWords.toLocaleString();
+        document.getElementById('withPhotos').textContent = withPhotos;
+    }
+    
+    // Filter journals
+    function filterJournals(filterType) {
+        currentFilter = filterType;
+        
+        // Update active button
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        event.target.classList.add('active');
+        
+        displayJournals();
+    }
+    
+    // Navigation
+    function goToDashboard() {
+        // window.location.href = 'DASHBOARD.html';
+        alert('Would go back to Dashboard');
+    }
+    
+    function addNewJournal() {
+        // window.location.href = 'ADD-JOURNAL.html';
+        alert('Would open Add Journal page');
+    }
+    
+    function viewJournal(journalId) {
+        // window.location.href = `JOURNAL-DETAILS.html?id=${journalId}`;
+        alert(`Would view journal ${journalId}`);
+    }
+    
+    function editJournal(journalId) {
+        // window.location.href = `ADD-JOURNAL.html?edit=${journalId}`;
+        alert(`Would edit journal ${journalId}`);
+    }
+    
+    function toggleFavorite(journalId) {
+        const index = journals.findIndex(j => j.id == journalId);
+        if (index !== -1) {
+            journals[index].isFavorite = !journals[index].isFavorite;
+            localStorage.setItem('dailyJournalEntries', JSON.stringify(journals));
+            displayJournals();
+            alert(journals[index].isFavorite ? 'Added to favorites!' : 'Removed from favorites');
+        }
+    }
+    
+    // Helper functions
+    function formatDate(dateString) {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('en-US', { 
+            weekday: 'long',
+            month: 'long', 
+            day: 'numeric',
+            year: 'numeric'
+        });
+    }
+    
+    function getMoodEmoji(mood) {
+        const emojis = {
+            'happy': '😊',
+            'excited': '🤩',
+            'relaxed': '😌',
+            'tired': '😴',
+            'stressed': '😫'
+        };
+        return emojis[mood] || '😊';
+    }
+    
+    function getWeatherEmoji(weather) {
+        const emojis = {
+            'sunny': '☀️',
+            'cloudy': '☁️',
+            'rainy': '🌧️',
+            'stormy': '⛈️',
+            'windy': '💨'
+        };
+        return emojis[weather] || '☀️';
+    }
+    
+    // Sample data
+    function getSampleJournals() {
+        return [
+            {
+                id: 1,
+                date: '2024-03-15',
+                tripId: 1,
+                tripName: 'Vacation in Boracay',
+                content: 'Arrived in Boracay! The white sand is even more beautiful than in photos. Spent the afternoon swimming and watching the sunset at White Beach. Had fresh seafood for dinner at D\'Mall.',
+                mood: 'excited',
+                weather: 'sunny',
+                photos: 3,
+                wordCount: 45,
+                isFavorite: true,
+                locations: ['White Beach', 'D\'Mall'],
+                activities: ['Swimming', 'Sunset watching', 'Seafood dinner']
+            },
+            {
+                id: 2,
+                date: '2024-03-14',
+                tripId: 1,
+                tripName: 'Vacation in Boracay',
+                content: 'Packed and ready to go! Flight is tomorrow morning. Can\'t wait to escape the city heat and feel the beach breeze. Hope the weather holds up for island hopping.',
+                mood: 'excited',
+                weather: 'cloudy',
+                photos: 0,
+                wordCount: 32,
+                isFavorite: false,
+                locations: ['Home'],
+                activities: ['Packing', 'Travel preparation']
+            },
+            {
+                id: 3,
+                date: '2024-02-17',
+                tripId: 2,
+                tripName: 'Tokyo City Adventure',
+                content: 'Last day in Tokyo. Visited Senso-ji Temple in Asakusa and bought souvenirs. The traditional architecture was breathtaking. Said goodbye to the amazing Japanese food.',
+                mood: 'happy',
+                weather: 'sunny',
+                photos: 5,
+                wordCount: 38,
+                isFavorite: true,
+                locations: ['Asakusa', 'Senso-ji Temple'],
+                activities: ['Temple visit', 'Souvenir shopping']
+            }
+        ];
+    }
+</script>
+</body>
+</html>

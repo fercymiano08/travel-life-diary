@@ -1,0 +1,1185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Trip - Travel Life Diary</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,100..1000;1,100..1000&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #ff3b2f 0%, #ff954d 100%);
+            --text-orange: #ff6b3d;
+            --input-bg: #eeeeee;
+            --light-orange: #ffe8e0;
+            --green: #4CAF50;
+            --red: #ff3b2f;
+            --blue: #2196F3;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        body {
+            background: var(--primary-gradient);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+        }
+
+        .container {
+            background-color: white;
+            width: 100%;
+            max-width: 650px;
+            border-radius: 40px;
+            padding: 35px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            max-height: 95vh;
+            overflow-y: auto;
+        }
+
+        h1.main-title {
+            color: var(--text-orange);
+            font-size: 26px;
+            text-transform: uppercase;
+            margin-bottom: 25px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        /* Progress Steps */
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .progress-steps::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 10%;
+            right: 10%;
+            height: 3px;
+            background: #eee;
+            z-index: 1;
+        }
+
+        .step {
+            position: relative;
+            z-index: 2;
+            background: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: #999;
+            border: 3px solid #eee;
+            background: white;
+        }
+
+        .step.active {
+            background: var(--primary-gradient);
+            color: white;
+            border-color: var(--text-orange);
+        }
+
+        .step-label {
+            position: absolute;
+            top: 35px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.7rem;
+            white-space: nowrap;
+            color: #999;
+            min-width: 80px;
+            text-align: center;
+        }
+
+        .step.active .step-label {
+            color: var(--text-orange);
+            font-weight: 600;
+        }
+
+        /* Form Sections */
+        .form-section {
+            position: relative;
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border: 5px solid;
+            border-image: var(--primary-gradient) 1;
+            display: none;
+        }
+
+        .form-section.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-title {
+            color: var(--text-orange);
+            font-size: 18px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-group { 
+            margin-bottom: 18px; 
+        }
+
+        label {
+            display: block;
+            color: var(--text-orange);
+            font-size: 14px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .required::after {
+            content: " *";
+            color: var(--red);
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 14px 15px;
+            background-color: var(--input-bg);
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            color: #333;
+            outline: none;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--text-orange);
+            background: white;
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        /* Budget Breakdown */
+        .budget-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .budget-item.total {
+            border-top: 2px solid var(--text-orange);
+            border-bottom: none;
+            font-weight: 700;
+            font-size: 16px;
+            color: var(--text-orange);
+            margin-top: 10px;
+            padding-top: 15px;
+        }
+
+        .budget-item input {
+            width: 150px;
+            text-align: right;
+            padding: 8px 12px;
+            font-size: 14px;
+        }
+
+        /* Checkbox/Radio Groups */
+        .checkbox-group, .radio-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .checkbox-group label, .radio-group label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            color: #333;
+            transition: background 0.2s;
+        }
+
+        .checkbox-group label:hover, .radio-group label:hover {
+            background: #f0f0f0;
+        }
+
+        .checkbox-group input, .radio-group input {
+            width: auto;
+        }
+
+        /* Tags Input */
+        .tags-input-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .tags-input-container input {
+            flex: 1;
+        }
+
+        .tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .tag {
+            background: var(--light-orange);
+            color: var(--text-orange);
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .tag-remove {
+            cursor: pointer;
+            font-size: 16px;
+            line-height: 1;
+            opacity: 0.7;
+        }
+
+        .tag-remove:hover {
+            opacity: 1;
+        }
+
+        /* Journal Styles */
+        .journal-info-box {
+            background: var(--light-orange);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--text-orange);
+        }
+
+        .journal-option {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+            border: 2px solid #eee;
+        }
+
+        .journal-option:hover, .journal-option.selected {
+            background: #f9f9f9;
+            border-color: var(--text-orange);
+        }
+
+        .journal-option input[type="radio"] {
+            width: 20px;
+            height: 20px;
+        }
+
+        .journal-preview {
+            background: white;
+            border: 2px dashed #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+            display: none;
+        }
+
+        .journal-preview.active {
+            display: block;
+        }
+
+        /* Template Selector */
+        .template-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .template-card {
+            background: white;
+            border: 2px solid #eee;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .template-card:hover {
+            border-color: var(--text-orange);
+            transform: translateY(-2px);
+        }
+
+        .template-card.selected {
+            border-color: var(--text-orange);
+            background: var(--light-orange);
+        }
+
+        /* Photo Upload */
+        .image-upload-box {
+            min-height: 150px;
+            flex-direction: column;
+            gap: 12px;
+            border: 3px dashed #ccc;
+            border-radius: 10px;
+            padding: 25px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .image-upload-box:hover {
+            border-color: var(--text-orange);
+            background: #f9f9f9;
+        }
+
+        /* Navigation Buttons */
+        .form-navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid #eee;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border-radius: 30px;
+            border: none;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            min-width: 150px;
+        }
+
+        .btn-primary {
+            background: var(--primary-gradient);
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 59, 47, 0.3);
+        }
+
+        .btn-secondary {
+            background: #f5f5f5;
+            color: #666;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 59, 47, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(1px);
+        }
+
+        /* Currency */
+        .currency-wrap {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .currency-wrap::before {
+            content: "₱";
+            position: absolute;
+            left: 15px;
+            font-weight: bold;
+            color: #555;
+            font-size: 16px;
+        }
+        .currency-wrap input { 
+            padding-left: 35px; 
+        }
+
+        /* Info Tooltip */
+        .info-tooltip {
+            color: #666;
+            font-size: 12px;
+            font-style: italic;
+            margin-top: 5px;
+        }
+
+        /* Helper Text */
+        .helper-text {
+            color: #666;
+            font-size: 13px;
+            margin-top: 5px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1 class="main-title">Add New Trip 🇵🇭</h1>
+
+    <!-- Progress Steps -->
+    <div class="progress-steps">
+        <div class="step active" data-step="1">
+            1
+            <div class="step-label">Basic Info</div>
+        </div>
+        <div class="step" data-step="2">
+            2
+            <div class="step-label">Trip Details</div>
+        </div>
+        <div class="step" data-step="3">
+            3
+            <div class="step-label">Budget & Safety</div>
+        </div>
+        <div class="step" data-step="4">
+            4
+            <div class="step-label">Review & Save</div>
+        </div>
+    </div>
+
+    <form id="tripForm">
+        <!-- SECTION 1: BASIC INFO -->
+        <div class="form-section active" id="section-1">
+            <h2 class="section-title"><i data-lucide="map-pin"></i> Basic Information</h2>
+            
+            <div class="form-group">
+                <label for="tripName" class="required">Trip Name</label>
+                <input type="text" id="tripName" placeholder="e.g.: Summer in Boracay" required>
+                <div class="helper-text"><i data-lucide="lightbulb"></i> Make it descriptive and memorable!</div>
+            </div>
+
+            <div class="form-group">
+                <label for="destination" class="required">Destination</label>
+                <input type="text" id="destination" list="ph-spots" placeholder="Type or select a Philippine tourist spot" required>
+                <datalist id="ph-spots">
+                    <option value="Boracay, Aklan">Boracay, Aklan (Visayas)</option>
+                    <option value="El Nido, Palawan">El Nido, Palawan (Palawan)</option>
+                    <option value="Siargao, Surigao del Norte">Siargao, Surigao del Norte (Mindanao)</option>
+                    <option value="Baguio City, Benguet">Baguio City, Benguet (Luzon)</option>
+                    <option value="Chocolate Hills, Bohol">Chocolate Hills, Bohol (Visayas)</option>
+                    <option value="Vigan, Ilocos Sur">Vigan, Ilocos Sur (Luzon)</option>
+                    <option value="Mayon Volcano, Albay">Mayon Volcano, Albay (Luzon)</option>
+                    <option value="Coron, Palawan">Coron, Palawan (Palawan)</option>
+                </datalist>
+            </div>
+
+            <div class="row">
+                <div class="form-group">
+                    <label for="startDate" class="required">Start Date</label>
+                    <input type="date" id="startDate" required>
+                </div>
+                <div class="form-group">
+                    <label for="endDate" class="required">End Date</label>
+                    <input type="date" id="endDate" required>
+                    <div class="info-tooltip" id="durationDisplay"></div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Quick Templates (Optional)</label>
+                <div class="template-cards">
+                    <div class="template-card" data-template="beach" onclick="selectTemplate('beach')">
+                        <i data-lucide="sun" style="color: #ff6b3d;"></i>
+                        <div style="margin-top: 8px; font-weight: 600;">🏖️ Beach Getaway</div>
+                    </div>
+                    <div class="template-card" data-template="mountain" onclick="selectTemplate('mountain')">
+                        <i data-lucide="mountain" style="color: #4CAF50;"></i>
+                        <div style="margin-top: 8px; font-weight: 600;">⛰️ Mountain Hike</div>
+                    </div>
+                    <div class="template-card" data-template="city" onclick="selectTemplate('city')">
+                        <i data-lucide="building" style="color: #2196F3;"></i>
+                        <div style="margin-top: 8px; font-weight: 600;">🏙️ City Tour</div>
+                    </div>
+                    <div class="template-card" data-template="food" onclick="selectTemplate('food')">
+                        <i data-lucide="utensils" style="color: #FF9800;"></i>
+                        <div style="margin-top: 8px; font-weight: 600;">🍜 Food Trip</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-navigation">
+                <button type="button" class="btn btn-secondary" onclick="cancelTrip()">
+                    <i data-lucide="x"></i> Cancel
+                </button>
+                <button type="button" class="btn btn-primary" onclick="nextSection()">
+                    Next <i data-lucide="arrow-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- SECTION 2: TRIP DETAILS -->
+        <div class="form-section" id="section-2">
+            <h2 class="section-title"><i data-lucide="settings"></i> Trip Details</h2>
+            
+            <div class="row">
+                <div class="form-group">
+                    <label for="region" class="required">Philippine Region</label>
+                    <select id="region" required>
+                        <option value="" disabled selected>Select Region</option>
+                        <optgroup label="🇱🇺 Luzon">
+                            <option value="NCR">NCR: Metro Manila</option>
+                            <option value="CAR">CAR: Cordillera</option>
+                            <option value="I">Region I: Ilocos</option>
+                            <option value="II">Region II: Cagayan Valley</option>
+                            <option value="III">Region III: Central Luzon</option>
+                            <option value="IV-A">Region IV-A: CALABARZON</option>
+                            <option value="IV-B">Region IV-B: MIMAROPA</option>
+                            <option value="V">Region V: Bicol</option>
+                        </optgroup>
+                        <optgroup label="🇻🇸 Visayas">
+                            <option value="VI">Region VI: Western Visayas</option>
+                            <option value="VII">Region VII: Central Visayas</option>
+                            <option value="VIII">Region VIII: Eastern Visayas</option>
+                        </optgroup>
+                        <optgroup label="🇲🇳 Mindanao">
+                            <option value="IX">Region IX: Zamboanga Peninsula</option>
+                            <option value="X">Region X: Northern Mindanao</option>
+                            <option value="XI">Region XI: Davao Region</option>
+                            <option value="XII">Region XII: SOCCSKSARGEN</option>
+                            <option value="XIII">Region XIII: Caraga</option>
+                            <option value="BARMM">BARMM: Bangsamoro</option>
+                        </optgroup>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="tripType" class="required">Trip Type</label>
+                    <select id="tripType" required>
+                        <option value="" disabled selected>Select type</option>
+                        <option value="beach">🏖️ Beach / Island Hopping</option>
+                        <option value="mountain">⛰️ Mountain / Hiking</option>
+                        <option value="cultural">🏛️ Cultural / Heritage</option>
+                        <option value="city">🏙️ City Exploration</option>
+                        <option value="food">🍜 Food Trip / Food Crawl</option>
+                        <option value="festival">🎉 Festival Experience</option>
+                        <option value="roadtrip">🚗 Road Trip</option>
+                        <option value="diving">🤿 Diving / Snorkeling</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="transport">Main Transportation in PH</label>
+                <select id="transport">
+                    <option value="" selected>Select transport</option>
+                    <option value="jeepney">🚌 Jeepney</option>
+                    <option value="tricycle">🛺 Tricycle</option>
+                    <option value="bus">🚍 Bus</option>
+                    <option value="van">🚐 Van/FX</option>
+                    <option value="ferry">⛴️ Ferry/Boat</option>
+                    <option value="plane">✈️ Plane</option>
+                    <option value="car">🚗 Private Car</option>
+                    <option value="motorcycle">🏍️ Motorcycle</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="season">Travel Season in PH</label>
+                <select id="season">
+                    <option value="" selected>Select season</option>
+                    <option value="dry">☀️ Dry Season (Nov-Apr)</option>
+                    <option value="wet">🌧️ Wet Season (May-Oct)</option>
+                    <option value="amihan">🍃 Amihan (NE Monsoon)</option>
+                    <option value="habagat">💨 Habagat (SW Monsoon)</option>
+                    <option value="christmas">🎄 Christmas Season</option>
+                    <option value="summer">🔥 Summer (Mar-May)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Travel Companions</label>
+                <div class="checkbox-group">
+                    <label><input type="checkbox" value="solo"> 🧍 Solo Travel</label>
+                    <label><input type="checkbox" value="family"> 👨‍👩‍👧‍👦 With Family</label>
+                    <label><input type="checkbox" value="friends"> 👥 With Barkada</label>
+                    <label><input type="checkbox" value="couple"> 💑 With Partner</label>
+                    <label><input type="checkbox" value="group"> 🎯 Tour Group</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Quick Packing List</label>
+                <div class="tags-input-container">
+                    <input type="text" id="packingInput" placeholder="Add item (e.g., swimwear, jacket)">
+                    <button type="button" class="btn-secondary" style="padding: 10px 20px;" onclick="addPackingItem()">Add</button>
+                </div>
+                <div class="tags-container" id="packingContainer">
+                    <!-- Items will appear here -->
+                </div>
+                <div class="helper-text"><i data-lucide="info"></i> Press Enter or click Add to include items</div>
+            </div>
+
+            <div class="form-navigation">
+                <button type="button" class="btn btn-secondary" onclick="prevSection()">
+                    <i data-lucide="arrow-left"></i> Back
+                </button>
+                <button type="button" class="btn btn-primary" onclick="nextSection()">
+                    Next <i data-lucide="arrow-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- SECTION 3: BUDGET & SAFETY -->
+        <div class="form-section" id="section-3">
+            <h2 class="section-title"><i data-lucide="wallet"></i> Budget & Safety</h2>
+            
+            <div class="form-group">
+                <label class="required">Budget Breakdown (₱)</label>
+                <div class="budget-item">
+                    <span>🚌 Transportation:</span>
+                    <input type="number" placeholder="0" class="budget-input" id="transportBudget" min="0">
+                </div>
+                <div class="budget-item">
+                    <span>🏨 Accommodation:</span>
+                    <input type="number" placeholder="0" class="budget-input" id="accomBudget" min="0">
+                </div>
+                <div class="budget-item">
+                    <span>🍜 Food:</span>
+                    <input type="number" placeholder="0" class="budget-input" id="foodBudget" min="0">
+                </div>
+                <div class="budget-item">
+                    <span>🎯 Activities:</span>
+                    <input type="number" placeholder="0" class="budget-input" id="activityBudget" min="0">
+                </div>
+                <div class="budget-item">
+                    <span>🛍️ Shopping:</span>
+                    <input type="number" placeholder="0" class="budget-input" id="shoppingBudget" min="0">
+                </div>
+                <div class="budget-item total">
+                    <strong>💰 Total Budget:</strong>
+                    <span id="totalBudget">₱0</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="travelers" class="required">Number of Travelers</label>
+                <input type="number" id="travelers" placeholder="1" min="1" max="50" required>
+                <div class="helper-text"><i data-lucide="users"></i> How many people are joining?</div>
+            </div>
+
+            <div class="form-group">
+                <label for="description">Trip Description</label>
+                <textarea rows="4" id="description" placeholder="What are you excited about? Any special plans or expectations?"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="emergencyName">Emergency Contact in PH</label>
+                <input type="text" id="emergencyName" placeholder="Contact person name">
+                <input type="tel" id="emergencyPhone" placeholder="Phone number (09xxxxxxxxx)" 
+                       pattern="[0-9]{11}" style="margin-top: 10px;">
+                <div class="helper-text"><i data-lucide="shield"></i> For safety purposes only</div>
+            </div>
+
+            <div class="form-group">
+                <label for="accommodation">Accommodation Address</label>
+                <input type="text" id="accommodation" placeholder="Hotel/Resort name and address">
+            </div>
+
+            <div class="form-navigation">
+                <button type="button" class="btn btn-secondary" onclick="prevSection()">
+                    <i data-lucide="arrow-left"></i> Back
+                </button>
+                <button type="button" class="btn btn-primary" onclick="nextSection()">
+                    Next <i data-lucide="arrow-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- SECTION 4: JOURNAL & FINAL -->
+        <div class="form-section" id="section-4">
+            <h2 class="section-title"><i data-lucide="book-open"></i> Journal & Final</h2>
+            
+            <div class="journal-info-box">
+                <p><strong>📝 About Travel Journal</strong><br>
+                Your personal diary during the trip. Add daily entries with photos and memories!</p>
+            </div>
+
+            <div class="form-group">
+                <label>Journal Style</label>
+                <div class="journal-option" onclick="selectJournalType('daily')">
+                    <input type="radio" name="journalType" value="daily" id="journalDaily" checked>
+                    <label for="journalDaily">
+                        <i data-lucide="calendar"></i>
+                        <div>
+                            <strong>📅 Daily Entries</strong><br>
+                            <small>Best for capturing day-by-day experiences</small>
+                        </div>
+                    </label>
+                </div>
+                
+                <div class="journal-option" onclick="selectJournalType('single')">
+                    <input type="radio" name="journalType" value="single" id="journalSingle">
+                    <label for="journalSingle">
+                        <i data-lucide="file-text"></i>
+                        <div>
+                            <strong>📄 Single Summary</strong><br>
+                            <small>One entry for the whole trip</small>
+                        </div>
+                    </label>
+                </div>
+                
+                <div class="journal-option" onclick="selectJournalType('none')">
+                    <input type="radio" name="journalType" value="none" id="journalNone">
+                    <label for="journalNone">
+                        <i data-lucide="x-circle"></i>
+                        <div>
+                            <strong>❌ No Journal</strong><br>
+                            <small>You can add later if needed</small>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>First Journal Entry (Optional)</label>
+                <textarea rows="3" id="firstJournal" placeholder="Write your first thoughts or expectations for this trip..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Add Photos</label>
+                <div class="image-upload-box" onclick="document.getElementById('photoUpload').click()">
+                    <i data-lucide="camera" style="width: 50px; height: 50px; color: var(--text-orange);"></i>
+                    <strong>Click to upload photos</strong>
+                    <span style="font-size: 13px; color: #666;">Maximum 10 photos, 5MB each</span>
+                </div>
+                <input type="file" id="photoUpload" accept="image/*" multiple style="display: none;">
+                <div id="photoPreview" style="margin-top: 15px;"></div>
+            </div>
+
+            <div class="form-group">
+                <label>Share Settings</label>
+                <div class="radio-group">
+                    <label><input type="radio" name="privacy" value="private" checked> 🔒 Private (Only Me)</label>
+                    <label><input type="radio" name="privacy" value="friends"> 👥 Friends Only</label>
+                    <label><input type="radio" name="privacy" value="public"> 🌍 Public (Community)</label>
+                </div>
+            </div>
+
+            <div class="form-navigation">
+                <button type="button" class="btn btn-secondary" onclick="prevSection()">
+                    <i data-lucide="arrow-left"></i> Back
+                </button>
+                <button type="button" class="btn btn-secondary" onclick="saveAsDraft()">
+                    <i data-lucide="save"></i> Save as Draft
+                </button>
+                <button type="submit" class="btn btn-primary">
+                    <i data-lucide="check"></i> Save Trip
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    // Initialize icons
+    lucide.createIcons();
+    
+    // State management
+    let currentSection = 1;
+    let packingItems = [];
+    let selectedTemplate = null;
+    let photos = [];
+    
+    // Set default dates
+    const today = new Date();
+    const nextWeek = new Date(today);
+    nextWeek.setDate(today.getDate() + 7);
+    
+    document.getElementById('startDate').valueAsDate = today;
+    document.getElementById('endDate').valueAsDate = nextWeek;
+    updateDurationDisplay();
+    
+    // Event Listeners
+    document.getElementById('startDate').addEventListener('change', updateDurationDisplay);
+    document.getElementById('endDate').addEventListener('change', updateDurationDisplay);
+    
+    // Budget calculation
+    document.querySelectorAll('.budget-input').forEach(input => {
+        input.addEventListener('input', calculateTotalBudget);
+    });
+    
+    // Packing list input
+    document.getElementById('packingInput').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            addPackingItem();
+        }
+    });
+    
+    // Photo upload
+    document.getElementById('photoUpload').addEventListener('change', handlePhotoUpload);
+    
+    // Form submission
+    document.getElementById('tripForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        saveTrip();
+    });
+    
+    // ========== FUNCTIONS ==========
+    
+    function updateDurationDisplay() {
+        const start = new Date(document.getElementById('startDate').value);
+        const end = new Date(document.getElementById('endDate').value);
+        
+        if (start && end && start < end) {
+            const diffTime = Math.abs(end - start);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            document.getElementById('durationDisplay').textContent = `Duration: ${diffDays} day${diffDays > 1 ? 's' : ''}`;
+            
+            // Warning for long trips
+            if (diffDays > 30) {
+                document.getElementById('durationDisplay').style.color = 'var(--red)';
+                document.getElementById('durationDisplay').innerHTML += ' ⚠️ Long trip!';
+            } else {
+                document.getElementById('durationDisplay').style.color = 'var(--green)';
+            }
+        }
+    }
+    
+    function calculateTotalBudget() {
+        let total = 0;
+        document.querySelectorAll('.budget-input').forEach(input => {
+            total += parseFloat(input.value) || 0;
+        });
+        document.getElementById('totalBudget').textContent = `₱${total.toLocaleString('en-PH')}`;
+        return total;
+    }
+    
+    function addPackingItem() {
+        const input = document.getElementById('packingInput');
+        const item = input.value.trim();
+        
+        if (item && !packingItems.includes(item)) {
+            packingItems.push(item);
+            updatePackingDisplay();
+            input.value = '';
+        }
+    }
+    
+    function updatePackingDisplay() {
+        const container = document.getElementById('packingContainer');
+        container.innerHTML = packingItems.map(item => `
+            <div class="tag">
+                ${item}
+                <span class="tag-remove" onclick="removePackingItem('${item}')">×</span>
+            </div>
+        `).join('');
+    }
+    
+    function removePackingItem(item) {
+        packingItems = packingItems.filter(i => i !== item);
+        updatePackingDisplay();
+    }
+    
+    function selectTemplate(template) {
+        selectedTemplate = template;
+        
+        // Remove selection from all
+        document.querySelectorAll('.template-card').forEach(card => {
+            card.classList.remove('selected');
+        });
+        
+        // Add selection to clicked
+        document.querySelector(`[data-template="${template}"]`).classList.add('selected');
+        
+        // Pre-fill based on template
+        const templates = {
+            beach: {
+                tripType: 'beach',
+                transport: 'ferry',
+                season: 'dry',
+                packing: ['Swimwear', 'Sunscreen', 'Beach towel', 'Flip flops']
+            },
+            mountain: {
+                tripType: 'mountain',
+                transport: 'bus',
+                season: 'dry',
+                packing: ['Hiking shoes', 'Jacket', 'Water bottle', 'First aid kit']
+            },
+            city: {
+                tripType: 'city',
+                transport: 'jeepney',
+                season: 'christmas',
+                packing: ['Comfortable shoes', 'Power bank', 'Umbrella', 'City map']
+            },
+            food: {
+                tripType: 'food',
+                transport: 'tricycle',
+                season: 'dry',
+                packing: ['Empty stomach', 'Camera', 'Water', 'Tissue']
+            }
+        };
+        
+        if (templates[template]) {
+            const t = templates[template];
+            document.getElementById('tripType').value = t.tripType;
+            document.getElementById('transport').value = t.transport;
+            document.getElementById('season').value = t.season;
+            
+            // Add packing items
+            t.packing.forEach(item => {
+                if (!packingItems.includes(item)) {
+                    packingItems.push(item);
+                }
+            });
+            updatePackingDisplay();
+        }
+    }
+    
+    function selectJournalType(type) {
+        document.querySelectorAll('.journal-option').forEach(opt => {
+            opt.classList.remove('selected');
+        });
+        event.currentTarget.classList.add('selected');
+        document.querySelector(`input[value="${type}"]`).checked = true;
+    }
+    
+    function handlePhotoUpload(e) {
+        const files = e.target.files;
+        const preview = document.getElementById('photoPreview');
+        
+        if (files.length > 10) {
+            alert('Maximum 10 photos allowed. Please select fewer photos.');
+            return;
+        }
+        
+        preview.innerHTML = '';
+        
+        Array.from(files).slice(0, 10).forEach(file => {
+            if (!file.type.startsWith('image/')) {
+                alert(`${file.name} is not an image file. Skipped.`);
+                return;
+            }
+            
+            if (file.size > 5 * 1024 * 1024) {
+                alert(`${file.name} is too large (max 5MB). Skipped.`);
+                return;
+            }
+            
+            photos.push(file);
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.style.width = '80px';
+                img.style.height = '80px';
+                img.style.objectFit = 'cover';
+                img.style.borderRadius = '8px';
+                img.style.marginRight = '10px';
+                img.style.marginBottom = '10px';
+                preview.appendChild(img);
+            };
+            reader.readAsDataURL(file);
+        });
+        
+        if (files.length > 0) {
+            alert(`📸 ${Math.min(files.length, 10)} photo(s) added to your trip!`);
+        }
+    }
+    
+    // Navigation between sections
+    function nextSection() {
+        if (!validateCurrentSection()) return;
+        
+        // Hide current section
+        document.getElementById(`section-${currentSection}`).classList.remove('active');
+        document.querySelector(`.step[data-step="${currentSection}"]`).classList.remove('active');
+        
+        // Show next section
+        currentSection++;
+        document.getElementById(`section-${currentSection}`).classList.add('active');
+        document.querySelector(`.step[data-step="${currentSection}"]`).classList.add('active');
+        
+        // Update button on last section
+        if (currentSection === 4) {
+            // Pre-fill review if needed
+        }
+    }
+    
+    function prevSection() {
+        // Hide current section
+        document.getElementById(`section-${currentSection}`).classList.remove('active');
+        document.querySelector(`.step[data-step="${currentSection}"]`).classList.remove('active');
+        
+        // Show previous section
+        currentSection--;
+        document.getElementById(`section-${currentSection}`).classList.add('active');
+        document.querySelector(`.step[data-step="${currentSection}"]`).classList.add('active');
+    }
+    
+    function validateCurrentSection() {
+        if (currentSection === 1) {
+            const tripName = document.getElementById('tripName').value;
+            const destination = document.getElementById('destination').value;
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            
+            if (!tripName || !destination || !startDate || !endDate) {
+                alert('Please fill in all required fields');
+                return false;
+            }
+            
+            if (new Date(startDate) > new Date(endDate)) {
+                alert('End date must be after start date');
+                return false;
+            }
+        } else if (currentSection === 2) {
+            const region = document.getElementById('region').value;
+            const tripType = document.getElementById('tripType').value;
+            
+            if (!region || !tripType) {
+                alert('Please select region and trip type');
+                return false;
+            }
+        } else if (currentSection === 3) {
+            const travelers = document.getElementById('travelers').value;
+            
+            if (!travelers || travelers < 1) {
+                alert('Please enter number of travelers');
+                return false;
+            }
+        }
+        
+        return true;
+    }
+    
+    function saveAsDraft() {
+        const tripData = collectTripData();
+        tripData.status = 'draft';
+        tripData.savedAt = new Date().toISOString();
+        
+        // Save to localStorage
+        let drafts = JSON.parse(localStorage.getItem('tripDrafts') || '[]');
+        drafts.push(tripData);
+        localStorage.setItem('tripDrafts', JSON.stringify(drafts));
+        
+        alert('✅ Trip saved as draft! You can continue later.');
+        console.log('Draft saved:', tripData);
+    }
+    
+    function saveTrip() {
+        if (!validateCurrentSection()) return;
+        
+        const tripData = collectTripData();
+        tripData.status = 'active';
+        tripData.createdAt = new Date().toISOString();
+        
+        // Calculate total budget
+        tripData.totalBudget = calculateTotalBudget();
+        
+        // Save to localStorage
+        let trips = JSON.parse(localStorage.getItem('travelTrips') || '[]');
+        tripData.id = Date.now();
+        trips.push(tripData);
+        localStorage.setItem('travelTrips', JSON.stringify(trips));
+        
+        // Success message
+        alert(`✅ Trip "${tripData.name}" saved successfully!\n\n` +
+              `📍 Destination: ${tripData.destination}\n` +
+              `💰 Budget: ₱${tripData.totalBudget.toLocaleString('en-PH')}\n` +
+              `📅 Duration: ${tripData.duration} days\n\n` +
+              `You can now add journal entries during your trip!`);
+        
+        console.log('Trip saved:', tripData);
+        
+        // Redirect to trips list
+        setTimeout(() => {
+            // window.location.href = 'trips-list.html';
+            alert('Would redirect to trips list page');
+        }, 1500);
+    }
+    
+    function collectTripData() {
+        const start = new Date(document.getElementById('startDate').value);
+        const end = new Date(document.getElementById('endDate').value);
+        const diffDays = Math.ceil((end - start) / (1000 * 60 * 60 * 24));
+        
+        return {
+            name: document.getElementById('tripName').value,
+            destination: document.getElementById('destination').value,
+            startDate: document.getElementById('startDate').value,
+            endDate: document.getElementById('endDate').value,
+            duration: diffDays,
+            region: document.getElementById('region').value,
+            tripType: document.getElementById('tripType').value,
+            transport: document.getElementById('transport').value,
+            season: document.getElementById('season').value,
+            travelers: parseInt(document.getElementById('travelers').value),
+            description: document.getElementById('description').value,
+            budget: {
+                transport: parseFloat(document.getElementById('transportBudget').value) || 0,
+                accommodation: parseFloat(document.getElementById('accomBudget').value) || 0,
+                food: parseFloat(document.getElementById('foodBudget').value) || 0,
+                activities: parseFloat(document.getElementById('activityBudget').value) || 0,
+                shopping: parseFloat(document.getElementById('shoppingBudget').value) || 0
+            },
+            companions: Array.from(document.querySelectorAll('.checkbox-group input:checked')).map(cb => cb.value),
+            packingList: packingItems,
+            journal: {
+                type: document.querySelector('input[name="journalType"]:checked').value,
+                firstEntry: document.getElementById('firstJournal').value
+            },
+            safety: {
+                emergencyName: document.getElementById('emergencyName').value,
+                emergencyPhone: document.getElementById('emergencyPhone').value,
+                accommodation: document.getElementById('accommodation').value
+            },
+            privacy: document.querySelector('input[name="privacy"]:checked').value,
+            photosCount: photos.length,
+            template: selectedTemplate
+        };
+    }
+    
+    function cancelTrip() {
+        if (confirm('Cancel without saving? Any entered data will be lost.')) {
+            // window.location.href = 'trips-list.html';
+            alert('Would cancel and go back to trips list');
+        }
+    }
+</script>
+</body>
+</html>

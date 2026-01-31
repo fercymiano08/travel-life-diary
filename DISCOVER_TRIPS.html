@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discover PH - Travel Life Diary</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #ff3b2f 0%, #ff954d 100%);
+            --text-main: #1a1a1a;
+            --text-orange: #ff5e3a;
+            --bg-light: #f4f6f8;
+            --card-radius: 28px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'DM Sans', sans-serif; }
+
+        body {
+            height: 100vh;
+            background: var(--primary-gradient);
+            display: flex; justify-content: center; align-items: center;
+            padding: 20px; overflow: hidden;
+        }
+
+        /* 850px Main Container */
+        .discover-container {
+            background: white;
+            width: 100%;
+            max-width: 850px;
+            height: 90vh;
+            border-radius: 40px;
+            display: flex; flex-direction: column;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.25);
+            position: relative; overflow: hidden;
+        }
+
+        /* Fixed Header */
+        .header {
+            padding: 20px 30px;
+            display: grid;
+            grid-template-columns: 120px 1fr 40px;
+            align-items: center;
+            border-bottom: 1px solid #f0f0f0;
+            background: white;
+            z-index: 10;
+        }
+
+        .back-btn {
+            display: flex; align-items: center; gap: 6px;
+            text-decoration: none; color: #444; font-weight: 700;
+            font-size: 0.8rem; background: #f5f5f5; 
+            padding: 8px 14px; border-radius: 14px; transition: 0.2s;
+            width: fit-content;
+        }
+        .back-btn:hover { background: #eee; transform: translateX(-3px); }
+
+        .search-container {
+            position: relative;
+            margin: 0 15px;
+        }
+        .search-container input {
+            width: 100%; padding: 10px 15px 10px 40px;
+            border-radius: 12px; border: 1px solid #eee;
+            background: #f9f9f9; outline: none; font-size: 0.9rem;
+        }
+        .search-container i { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #bbb; }
+
+        /* Scrollable Area */
+        .main-scroll {
+            flex: 1;
+            overflow-y: auto;
+            padding: 25px 30px;
+            background: var(--bg-light);
+        }
+        .main-scroll::-webkit-scrollbar { width: 5px; }
+        .main-scroll::-webkit-scrollbar-thumb { background: #ddd; border-radius: 10px; }
+
+        /* Section Title */
+        .section-header {
+            display: flex; justify-content: space-between; align-items: flex-end;
+            margin-bottom: 20px;
+        }
+        .section-header h2 { font-size: 1.4rem; color: var(--text-main); font-weight: 800; }
+        .section-header a { font-size: 0.8rem; color: var(--text-orange); font-weight: 700; text-decoration: none; }
+
+        /* Filter Chips Bar */
+        .filter-bar {
+            display: flex; gap: 10px; margin-bottom: 25px;
+            overflow-x: auto; padding-bottom: 5px;
+        }
+        .filter-bar::-webkit-scrollbar { display: none; }
+        .chip {
+            padding: 8px 18px; border-radius: 50px; background: white;
+            border: 1px solid #e0e0e0; color: #666; font-weight: 600;
+            font-size: 0.8rem; white-space: nowrap; cursor: pointer; transition: 0.2s;
+        }
+        .chip.active { background: var(--text-main); color: white; border-color: var(--text-main); }
+
+        /* Trip Grid */
+        .trip-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .trip-card {
+            background: white;
+            border-radius: var(--card-radius);
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            transition: 0.3s ease;
+            display: flex; flex-direction: column;
+        }
+        .trip-card:hover { transform: translateY(-5px); box-shadow: 0 12px 25px rgba(0,0,0,0.08); }
+
+        .image-wrapper {
+            position: relative;
+            width: 100%;
+            height: 180px;
+        }
+        .image-wrapper img { width: 100%; height: 100%; object-fit: cover; }
+
+        .save-heart {
+            position: absolute; top: 12px; right: 12px;
+            width: 35px; height: 35px; border-radius: 12px;
+            background: rgba(255,255,255,0.8); backdrop-filter: blur(4px);
+            display: flex; align-items: center; justify-content: center;
+            color: #ff3b2f; cursor: pointer;
+        }
+
+        .duration-tag {
+            position: absolute; bottom: 12px; left: 12px;
+            background: white; color: #333; padding: 4px 10px;
+            border-radius: 8px; font-size: 0.7rem; font-weight: 800;
+        }
+
+        .info-pane { padding: 18px; flex: 1; display: flex; flex-direction: column; }
+        .info-pane h3 { font-size: 1rem; color: #1a1a1a; margin-bottom: 4px; }
+        .location { font-size: 0.75rem; color: #888; display: flex; align-items: center; gap: 4px; margin-bottom: 12px; }
+
+        .card-footer {
+            margin-top: auto;
+            display: flex; justify-content: space-between; align-items: center;
+            padding-top: 12px; border-top: 1px solid #f5f5f5;
+        }
+        .price-tag { font-weight: 800; color: var(--text-orange); font-size: 1rem; }
+        .price-tag span { font-size: 0.7rem; color: #999; font-weight: 400; }
+        .rating-box { font-size: 0.8rem; font-weight: 700; display: flex; align-items: center; gap: 3px; }
+
+        @media (max-width: 650px) { .trip-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+    <div class="discover-container">
+        <header class="header">
+            <a href="DASHBOARD.html" class="back-btn">
+                <i data-lucide="chevron-left" size="16"></i>
+                <span>BACK</span>
+            </a>
+            <div class="search-container">
+                <i data-lucide="search" size="16"></i>
+                <input type="text" placeholder="Search destinations in PH...">
+            </div>
+            <i data-lucide="bell" style="color: #bbb; cursor: pointer;"></i>
+        </header>
+
+        <div class="main-scroll">
+            
+            <div class="section-header">
+                <h2>Explore Philippines</h2>
+                <a href="#">View All</a>
+            </div>
+
+            <div class="filter-bar">
+                <div class="chip active">Trending</div>
+                <div class="chip">🏝️ Islands</div>
+                <div class="chip">🌲 Highlands</div>
+                <div class="chip">🏙️ City Life</div>
+                <div class="chip">🏮 Festivals</div>
+            </div>
+
+            <div class="trip-grid">
+                
+                <div class="trip-card">
+                    <div class="image-wrapper">
+                        <img src="https://images.unsplash.com/photo-1518509562904-e7ef99cdcc86?auto=format&fit=crop&w=500">
+                        <div class="save-heart"><i data-lucide="heart" size="18"></i></div>
+                        <div class="duration-tag">4 DAYS</div>
+                    </div>
+                    <div class="info-pane">
+                        <h3>El Nido Island Hopping</h3>
+                        <div class="location"><i data-lucide="map-pin" size="12"></i> Palawan, PH</div>
+                        <div class="card-footer">
+                            <div class="price-tag">₱12,500<span>/avg</span></div>
+                            <div class="rating-box"><i data-lucide="star" size="14" fill="#ffb800" color="#ffb800"></i> 4.9</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="trip-card">
+                    <div class="image-wrapper">
+                        <img src="https://images.unsplash.com/photo-1626244244562-4299b6857999?auto=format&fit=crop&w=500">
+                        <div class="save-heart"><i data-lucide="heart" size="18"></i></div>
+                        <div class="duration-tag">3 DAYS</div>
+                    </div>
+                    <div class="info-pane">
+                        <h3>Baguio Pine Retreat</h3>
+                        <div class="location"><i data-lucide="map-pin" size="12"></i> Benguet, PH</div>
+                        <div class="card-footer">
+                            <div class="price-tag">₱6,800<span>/avg</span></div>
+                            <div class="rating-box"><i data-lucide="star" size="14" fill="#ffb800" color="#ffb800"></i> 4.7</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="trip-card">
+                    <div class="image-wrapper">
+                        <img src="https://images.unsplash.com/photo-1533154683836-84ea7a0bc310?auto=format&fit=crop&w=500">
+                        <div class="save-heart"><i data-lucide="heart" size="18"></i></div>
+                        <div class="duration-tag">5 DAYS</div>
+                    </div>
+                    <div class="info-pane">
+                        <h3>Siargao Surf & Vibe</h3>
+                        <div class="location"><i data-lucide="map-pin" size="12"></i> Surigao del Norte, PH</div>
+                        <div class="card-footer">
+                            <div class="price-tag">₱15,200<span>/avg</span></div>
+                            <div class="rating-box"><i data-lucide="star" size="14" fill="#ffb800" color="#ffb800"></i> 5.0</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="trip-card">
+                    <div class="image-wrapper">
+                        <img src="https://images.unsplash.com/photo-1542362567-b044002796be?auto=format&fit=crop&w=500">
+                        <div class="save-heart"><i data-lucide="heart" size="18"></i></div>
+                        <div class="duration-tag">3 DAYS</div>
+                    </div>
+                    <div class="info-pane">
+                        <h3>Cebu Heritage & Falls</h3>
+                        <div class="location"><i data-lucide="map-pin" size="12"></i> Cebu City, PH</div>
+                        <div class="card-footer">
+                            <div class="price-tag">₱8,400<span>/avg</span></div>
+                            <div class="rating-box"><i data-lucide="star" size="14" fill="#ffb800" color="#ffb800"></i> 4.8</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        // Chip toggle logic
+        document.querySelectorAll('.chip').forEach(chip => {
+            chip.addEventListener('click', function() {
+                document.querySelector('.chip.active').classList.remove('active');
+                this.classList.add('active');
+            });
+        });
+
+        // Heart toggle logic
+        document.querySelectorAll('.save-heart').forEach(heart => {
+            heart.addEventListener('click', function() {
+                const icon = this.querySelector('i');
+                const isLiked = icon.getAttribute('fill') === 'currentColor';
+                icon.setAttribute('fill', isLiked ? 'none' : 'currentColor');
+                this.style.background = isLiked ? 'rgba(255,255,255,0.8)' : '#ff3b2f';
+                this.style.color = isLiked ? '#ff3b2f' : 'white';
+            });
+        });
+    </script>
+</body>
+</html>

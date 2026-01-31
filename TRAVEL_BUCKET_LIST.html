@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PH Bucket List - Travel Life Diary</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,100..1000;1,100..1000&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #ff3b2f 0%, #ff954d 100%);
+            --text-orange: #ff6b3d;
+            --light-orange: #ffe8e0;
+            --input-bg: #eeeeee;
+            --success-green: #4CAF50;
+            --danger-red: #ff3b2f;
+            --shadow-medium: 0 8px 24px rgba(0,0,0,0.12);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        body {
+            background: var(--primary-gradient);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: white;
+            width: 100%;
+            max-width: 650px;
+            border-radius: 40px;
+            padding: 30px;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.2);
+        }
+
+        /* Header */
+        .header-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .title-area h1 {
+            color: var(--text-orange);
+            font-size: 24px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .title-area p {
+            color: #777;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        /* Buttons */
+        .btn-action {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 15px;
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+            text-transform: uppercase;
+            background: var(--primary-gradient);
+            box-shadow: 0 4px 0 rgba(0,0,0,0.1);
+            transition: transform 0.1s, box-shadow 0.1s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-action:active {
+            transform: translateY(3px);
+            box-shadow: 0 1px 0 rgba(0,0,0,0.1);
+        }
+
+        .btn-small {
+            padding: 8px 15px;
+            font-size: 12px;
+        }
+
+        /* Module Sections */
+        .module-section {
+            border: 2px solid #f0f0f0;
+            border-radius: 25px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .module-label {
+            font-size: 12px;
+            font-weight: 800;
+            color: #bbb;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .counter {
+            background: var(--text-orange);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 10px;
+            font-size: 11px;
+        }
+
+        /* Input Area */
+        .input-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+
+        .input-box {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .input-box label {
+            font-size: 12px;
+            font-weight: 700;
+            color: #777;
+            margin-left: 5px;
+        }
+
+        .input-box input, .input-box select {
+            padding: 15px;
+            background: var(--input-bg);
+            border: none;
+            border-radius: 15px;
+            outline: none;
+            font-size: 14px;
+        }
+
+        .input-box select {
+            cursor: pointer;
+        }
+
+        .priority-select {
+            grid-column: span 2;
+        }
+
+        /* Goal Items */
+        .goal-item {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 18px;
+            margin-bottom: 12px;
+            border-left: 5px solid var(--text-orange);
+            transition: all 0.3s ease;
+        }
+
+        .goal-item.visited {
+            border-left: 5px solid var(--success-green);
+            background: #f5fff5;
+            opacity: 0.9;
+        }
+
+        .goal-item.high-priority {
+            border-left: 5px solid var(--danger-red);
+            background: #fff5f5;
+        }
+
+        .goal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+
+        .goal-info h3 {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .goal-info p {
+            font-size: 12px;
+            color: var(--text-orange);
+            font-weight: 700;
+            margin-bottom: 3px;
+        }
+
+        .goal-meta {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 8px;
+        }
+
+        .goal-meta span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 12px;
+            color: #777;
+        }
+
+        .goal-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-check, .btn-delete {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .btn-check {
+            background: #eee;
+            color: #999;
+        }
+
+        .btn-check:hover {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .visited .btn-check {
+            background: var(--success-green);
+            color: white;
+        }
+
+        .btn-delete {
+            background: #ffebee;
+            color: #ff5252;
+        }
+
+        .btn-delete:hover {
+            background: #ff5252;
+            color: white;
+        }
+
+        /* Status Message */
+        .status-message {
+            text-align: center;
+            padding: 20px;
+            color: #999;
+            font-style: italic;
+            font-size: 14px;
+        }
+
+        /* Stats Bar */
+        .stats-bar {
+            display: flex;
+            justify-content: space-around;
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--text-orange);
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: #777;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 30px 20px;
+            color: #aaa;
+        }
+
+        .empty-state i {
+            margin-bottom: 10px;
+            color: #ddd;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .input-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .priority-select {
+                grid-column: span 1;
+            }
+            
+            .goal-header {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .goal-actions {
+                align-self: flex-end;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header-section">
+            <div class="title-area">
+                <h1>PH TRAVEL BUCKET LIST</h1>
+                <p>Track your Philippine travel dreams & memories</p>
+            </div>
+            <button class="btn-action" onclick="location.href='DASHBOARD.html'">
+                <i data-lucide="arrow-left" size="18"></i> Home
+            </button>
+        </div>
+
+        <div class="module-section">
+            <div class="module-label">Add New Travel Goal</div>
+            <div class="input-grid">
+                <div class="input-box">
+                    <label for="dest">Destination Name</label>
+                    <input type="text" id="dest" placeholder="e.g. Coron, Palawan">
+                </div>
+                <div class="input-box">
+                    <label for="prov">Province / Region</label>
+                    <input type="text" id="prov" placeholder="e.g. Palawan">
+                </div>
+                <div class="input-box priority-select">
+                    <label for="priority">Priority Level</label>
+                    <select id="priority">
+                        <option value="normal">Normal Priority</option>
+                        <option value="high">High Priority</option>
+                        <option value="dream">Dream Destination</option>
+                    </select>
+                </div>
+            </div>
+            <button class="btn-action" style="width: 100%; justify-content: center;" onclick="addGoal()">
+                <i data-lucide="plus-circle" size="20"></i> Add to Bucket List
+            </button>
+        </div>
+
+        <div class="stats-bar">
+            <div class="stat-item">
+                <div class="stat-value" id="totalGoals">2</div>
+                <div class="stat-label">Total Goals</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="activeGoals">1</div>
+                <div class="stat-label">Active</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="completedGoals">1</div>
+                <div class="stat-label">Completed</div>
+            </div>
+        </div>
+
+        <div class="module-section">
+            <div class="module-label">
+                Active Travel Dreams
+                <span class="counter" id="activeCounter">1</span>
+            </div>
+            <div id="activeList">
+                <!-- Dynamic content will be added here -->
+                <div class="goal-item high-priority" data-id="1">
+                    <div class="goal-header">
+                        <div class="goal-info">
+                            <h3>Siargao Island</h3>
+                            <p>Surigao del Norte</p>
+                            <div class="goal-meta">
+                                <span><i data-lucide="calendar" size="14"></i> Added: 2 weeks ago</span>
+                                <span><i data-lucide="flag" size="14"></i> High Priority</span>
+                            </div>
+                        </div>
+                        <div class="goal-actions">
+                            <button class="btn-check" onclick="markDone('1')"><i data-lucide="check" size="18"></i></button>
+                            <button class="btn-delete" onclick="deleteGoal('1')"><i data-lucide="trash-2" size="16"></i></button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="goal-item" data-id="2">
+                    <div class="goal-header">
+                        <div class="goal-info">
+                            <h3>Mayon Volcano</h3>
+                            <p>Albay, Bicol Region</p>
+                            <div class="goal-meta">
+                                <span><i data-lucide="calendar" size="14"></i> Added: 1 month ago</span>
+                                <span><i data-lucide="flag" size="14"></i> Normal Priority</span>
+                            </div>
+                        </div>
+                        <div class="goal-actions">
+                            <button class="btn-check" onclick="markDone('2')"><i data-lucide="check" size="18"></i></button>
+                            <button class="btn-delete" onclick="deleteGoal('2')"><i data-lucide="trash-2" size="16"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="activeEmpty" class="empty-state" style="display: none;">
+                <i data-lucide="compass" size="48"></i>
+                <p>No active travel goals. Add one above!</p>
+            </div>
+        </div>
+
+        <div class="module-section">
+            <div class="module-label">
+                Visited / Completed
+                <span class="counter" id="doneCounter">1</span>
+            </div>
+            <div id="doneList">
+                <!-- Dynamic content will be added here -->
+                <div class="goal-item visited" data-id="3">
+                    <div class="goal-header">
+                        <div class="goal-info">
+                            <h3>Baguio City</h3>
+                            <p>Benguet, Cordillera</p>
+                            <div class="goal-meta">
+                                <span><i data-lucide="calendar" size="14"></i> Visited: 3 months ago</span>
+                                <span><i data-lucide="star" size="14"></i> Completed</span>
+                            </div>
+                        </div>
+                        <div class="goal-actions">
+                            <button class="btn-check"><i data-lucide="check" size="18"></i></button>
+                            <button class="btn-delete" onclick="deleteGoal('3')"><i data-lucide="trash-2" size="16"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="doneEmpty" class="empty-state" style="display: none;">
+                <i data-lucide="map-pin" size="48"></i>
+                <p>No completed destinations yet. Start exploring!</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+        
+        // Initialize goals data
+        let goals = [
+            {
+                id: 1,
+                name: "Siargao Island",
+                province: "Surigao del Norte",
+                priority: "high",
+                addedDate: "2024-01-15",
+                visited: false
+            },
+            {
+                id: 2,
+                name: "Mayon Volcano",
+                province: "Albay, Bicol Region",
+                priority: "normal",
+                addedDate: "2023-12-10",
+                visited: false
+            },
+            {
+                id: 3,
+                name: "Baguio City",
+                province: "Benguet, Cordillera",
+                priority: "normal",
+                addedDate: "2023-10-05",
+                visited: true,
+                visitedDate: "2023-11-20"
+            }
+        ];
+        
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            updateLists();
+            updateStats();
+        });
+        
+        // Add a new goal
+        function addGoal() {
+            const dest = document.getElementById('dest').value.trim();
+            const prov = document.getElementById('prov').value.trim();
+            const priority = document.getElementById('priority').value;
+            
+            if(!dest) {
+                alert("Please enter a destination name");
+                return;
+            }
+            
+            // Create new goal object
+            const newGoal = {
+                id: Date.now(), // Use timestamp as unique ID
+                name: dest,
+                province: prov || "Not specified",
+                priority: priority,
+                addedDate: new Date().toISOString().split('T')[0],
+                visited: false
+            };
+            
+            goals.push(newGoal);
+            
+            // Clear inputs
+            document.getElementById('dest').value = "";
+            document.getElementById('prov').value = "";
+            document.getElementById('priority').value = "normal";
+            
+            // Update UI
+            updateLists();
+            updateStats();
+            
+            // Show confirmation
+            showStatusMessage(`Added "${dest}" to your bucket list!`, "success");
+        }
+        
+        // Mark goal as done
+        function markDone(id) {
+            const goal = goals.find(g => g.id == id);
+            if(goal) {
+                goal.visited = true;
+                goal.visitedDate = new Date().toISOString().split('T')[0];
+                updateLists();
+                updateStats();
+                showStatusMessage(`Congratulations! You've visited ${goal.name}!`, "success");
+            }
+        }
+        
+        // Delete a goal
+        function deleteGoal(id) {
+            if(confirm("Are you sure you want to remove this destination from your list?")) {
+                goals = goals.filter(g => g.id != id);
+                updateLists();
+                updateStats();
+                showStatusMessage("Destination removed from list", "info");
+            }
+        }
+        
+        // Update the goal lists in the UI
+        function updateLists() {
+            const activeList = document.getElementById('activeList');
+            const doneList = document.getElementById('doneList');
+            const activeEmpty = document.getElementById('activeEmpty');
+            const doneEmpty = document.getElementById('doneEmpty');
+            
+            // Clear current lists
+            activeList.innerHTML = '';
+            doneList.innerHTML = '';
+            
+            // Separate active and completed goals
+            const activeGoals = goals.filter(g => !g.visited);
+            const completedGoals = goals.filter(g => g.visited);
+            
+            // Display active goals
+            if(activeGoals.length > 0) {
+                activeEmpty.style.display = 'none';
+                activeGoals.forEach(goal => {
+                    activeList.appendChild(createGoalElement(goal));
+                });
+            } else {
+                activeEmpty.style.display = 'block';
+            }
+            
+            // Display completed goals
+            if(completedGoals.length > 0) {
+                doneEmpty.style.display = 'none';
+                completedGoals.forEach(goal => {
+                    doneList.appendChild(createGoalElement(goal));
+                });
+            } else {
+                doneEmpty.style.display = 'block';
+            }
+            
+            // Update counters
+            document.getElementById('activeCounter').textContent = activeGoals.length;
+            document.getElementById('doneCounter').textContent = completedGoals.length;
+            
+            // Reinitialize icons for new elements
+            lucide.createIcons();
+        }
+        
+        // Create a goal element for the UI
+        function createGoalElement(goal) {
+            const item = document.createElement('div');
+            item.className = `goal-item ${goal.visited ? 'visited' : ''} ${goal.priority === 'high' ? 'high-priority' : ''}`;
+            item.setAttribute('data-id', goal.id);
+            
+            // Calculate time since added/visited
+            const dateToUse = goal.visited ? goal.visitedDate : goal.addedDate;
+            const timeText = getTimeText(dateToUse, goal.visited);
+            
+            // Priority text
+            const priorityText = goal.priority === 'high' ? 'High Priority' : 
+                                goal.priority === 'dream' ? 'Dream Destination' : 'Normal Priority';
+            
+            item.innerHTML = `
+                <div class="goal-header">
+                    <div class="goal-info">
+                        <h3>${goal.name}</h3>
+                        <p>${goal.province}</p>
+                        <div class="goal-meta">
+                            <span><i data-lucide="${goal.visited ? 'calendar-check' : 'calendar'}" size="14"></i> ${timeText}</span>
+                            <span><i data-lucide="${goal.visited ? 'star' : 'flag'}" size="14"></i> ${goal.visited ? 'Completed' : priorityText}</span>
+                        </div>
+                    </div>
+                    <div class="goal-actions">
+                        ${!goal.visited ? `<button class="btn-check" onclick="markDone('${goal.id}')"><i data-lucide="check" size="18"></i></button>` : `<button class="btn-check"><i data-lucide="check" size="18"></i></button>`}
+                        <button class="btn-delete" onclick="deleteGoal('${goal.id}')"><i data-lucide="trash-2" size="16"></i></button>
+                    </div>
+                </div>
+            `;
+            
+            return item;
+        }
+        
+        // Get human-readable time text
+        function getTimeText(dateString, isVisited) {
+            const date = new Date(dateString);
+            const now = new Date();
+            const diffTime = Math.abs(now - date);
+            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+            
+            if(diffDays === 0) return isVisited ? "Visited today" : "Added today";
+            if(diffDays === 1) return isVisited ? "Visited yesterday" : "Added yesterday";
+            if(diffDays < 7) return isVisited ? `Visited ${diffDays} days ago` : `Added ${diffDays} days ago`;
+            if(diffDays < 30) {
+                const weeks = Math.floor(diffDays / 7);
+                return isVisited ? `Visited ${weeks} week${weeks > 1 ? 's' : ''} ago` : `Added ${weeks} week${weeks > 1 ? 's' : ''} ago`;
+            }
+            if(diffDays < 365) {
+                const months = Math.floor(diffDays / 30);
+                return isVisited ? `Visited ${months} month${months > 1 ? 's' : ''} ago` : `Added ${months} month${months > 1 ? 's' : ''} ago`;
+            }
+            
+            const years = Math.floor(diffDays / 365);
+            return isVisited ? `Visited ${years} year${years > 1 ? 's' : ''} ago` : `Added ${years} year${years > 1 ? 's' : ''} ago`;
+        }
+        
+        // Update statistics
+        function updateStats() {
+            const total = goals.length;
+            const active = goals.filter(g => !g.visited).length;
+            const completed = goals.filter(g => g.visited).length;
+            
+            document.getElementById('totalGoals').textContent = total;
+            document.getElementById('activeGoals').textContent = active;
+            document.getElementById('completedGoals').textContent = completed;
+        }
+        
+        // Show status message
+        function showStatusMessage(message, type) {
+            // Create message element
+            const messageEl = document.createElement('div');
+            messageEl.className = `status-message ${type}`;
+            messageEl.textContent = message;
+            messageEl.style.cssText = `
+                position: fixed;
+                top: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: ${type === 'success' ? '#4CAF50' : '#ff9800'};
+                color: white;
+                padding: 12px 24px;
+                border-radius: 10px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                z-index: 1000;
+                font-weight: 600;
+                animation: fadeInOut 3s ease-in-out;
+            `;
+            
+            // Add to body
+            document.body.appendChild(messageEl);
+            
+            // Remove after animation
+            setTimeout(() => {
+                if(messageEl.parentNode) {
+                    messageEl.parentNode.removeChild(messageEl);
+                }
+            }, 3000);
+        }
+        
+        // Add CSS for animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeInOut {
+                0% { opacity: 0; top: 0; }
+                10% { opacity: 1; top: 20px; }
+                90% { opacity: 1; top: 20px; }
+                100% { opacity: 0; top: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

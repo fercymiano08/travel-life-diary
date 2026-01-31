@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Info - Travel Life Diary</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root { --primary-gradient: linear-gradient(135deg, #ff3b2f 0%, #ff954d 100%); --bg: #f4f6f8; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'DM Sans', sans-serif; }
+        body { height: 100vh; background: var(--primary-gradient); display: flex; justify-content: center; align-items: center; padding: 20px; }
+        .sub-container { background: white; width: 100%; max-width: 850px; height: 90vh; border-radius: 40px; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 30px 60px rgba(0,0,0,0.2); }
+        .header { padding: 25px 35px; display: flex; align-items: center; border-bottom: 1px solid #eee; gap: 20px; }
+        .back-btn { background: #f5f5f5; padding: 10px; border-radius: 12px; color: #444; text-decoration: none; display: flex; }
+        .content { flex: 1; overflow-y: auto; padding: 40px; background: #fcfcfc; }
+        .form-group { margin-bottom: 25px; }
+        .form-group label { display: block; font-size: 0.85rem; font-weight: 700; color: #888; margin-bottom: 10px; text-transform: uppercase; }
+        .form-group input { width: 100%; padding: 15px; border-radius: 15px; border: 1px solid #eee; background: white; font-size: 1rem; outline: none; transition: 0.3s; }
+        .form-group input:focus { border-color: #ff5e3a; box-shadow: 0 0 0 4px rgba(255, 94, 58, 0.1); }
+        .avatar-edit { display: flex; align-items: center; gap: 20px; margin-bottom: 40px; }
+        .avatar-edit img { width: 100px; height: 100px; border-radius: 30px; object-fit: cover; }
+        .change-photo { background: #fff5f2; color: #ff5e3a; padding: 10px 20px; border-radius: 12px; font-weight: 700; cursor: pointer; border: none; }
+        .save-bar { padding: 20px 40px; background: white; border-top: 1px solid #eee; display: flex; justify-content: flex-end; }
+        .btn-save { background: var(--primary-gradient); color: white; border: none; padding: 12px 40px; border-radius: 15px; font-weight: 800; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="sub-container">
+        <header class="header">
+            <a href="SETTINGS.html" class="back-btn"><i data-lucide="arrow-left"></i></a>
+            <h2 style="font-size: 1.2rem;">Personal Information</h2>
+        </header>
+        <div class="content">
+            <div class="avatar-edit">
+                <img src="https://i.pravatar.cc/150?u=me">
+                <div>
+                    <button class="change-photo">Change Photo</button>
+                    <p style="font-size: 0.75rem; color: #aaa; margin-top: 8px;">JPG or PNG. Max size of 800K</p>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Full Name</label>
+                <input type="text" value="Alex Gonzaga">
+            </div>
+            <div class="form-group">
+                <label>Email Address</label>
+                <input type="email" value="alex.travels@email.ph">
+            </div>
+            <div class="form-group">
+                <label>Phone Number</label>
+                <input type="text" value="+63 917 123 4567">
+            </div>
+            <div class="form-group">
+                <label>Bio</label>
+                <input type="text" value="Always looking for the next hidden gem in the Philippines.">
+            </div>
+        </div>
+        <div class="save-bar"><button class="btn-save">Save Changes</button></div>
+    </div>
+    <script>lucide.createIcons();</script>
+</body>
+</html>

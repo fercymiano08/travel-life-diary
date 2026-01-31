@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- FIXED: Proper mobile viewport with correct zoom settings -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Modern Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'DM Sans', sans-serif;
+            -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
+        }
+
+        body {
+            margin: 0;
+            padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left); /* Safe area for notches */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            min-height: -webkit-fill-available; /* Fix for mobile browsers */
+            background: linear-gradient(135deg, #ff3b2f 0%, #ff954c 100%);
+            overflow: hidden;
+            touch-action: manipulation; /* Better touch handling */
+        }
+
+        /* Entry Animation */
+        .login-card {
+            background-color: white;
+            padding: clamp(30px, 6vw, 50px); /* Responsive padding */
+            border-radius: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+            width: 92%;
+            max-width: 450px;
+            min-width: 280px; /* Prevent too small on very narrow screens */
+            text-align: center;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.8s ease forwards;
+            margin: 20px; /* Added margin for safety */
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            color: #ff7b39;
+            font-size: clamp(1.8rem, 5vw, 2.2rem); /* Responsive font size */
+            margin-bottom: clamp(25px, 5vw, 35px);
+            letter-spacing: 1px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .input-wrapper {
+            width: 100%;
+            max-width: 320px;
+            position: relative;
+        }
+
+        label {
+            display: block;
+            width: 100%;
+            max-width: 320px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            font-size: 0.9rem; /* Slightly larger for mobile */
+            color: #444;
+        }
+
+        input {
+            background-color: #e0e0e0;
+            border: 2px solid transparent;
+            padding: 16px 50px 16px 15px; /* Increased padding for better touch */
+            width: 100%;
+            border-radius: 4px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s;
+            -webkit-appearance: none; /* Remove iOS styling */
+            appearance: none;
+        }
+
+        /* FIXED: Better mobile keyboard handling */
+        input:focus {
+            border-color: #ff954c;
+            font-size: 16px; /* Prevents iOS zoom on focus */
+        }
+
+        /* FIXED: Larger touch target for password toggle */
+        .toggle-password {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 10px; /* Larger touch area */
+            width: 44px; /* Minimum touch target size */
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s;
+            color: #666;
+            border-radius: 4px;
+            touch-action: manipulation;
+        }
+
+        .toggle-password:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        .toggle-password:active {
+            transform: translateY(-50%) scale(0.9);
+        }
+
+        .eye-icon {
+            width: 24px; /* Slightly larger for mobile */
+            height: 24px;
+            stroke: currentColor;
+            stroke-width: 1.5;
+            fill: none;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .eye-slash {
+            display: none;
+        }
+
+        .password-visible .eye-slash {
+            display: block;
+        }
+
+        .password-visible .eye-open {
+            display: none;
+        }
+
+        /* FIXED: Better mobile button */
+        .login-btn {
+            background: linear-gradient(to right, #ff4133, #ff9b52);
+            color: white;
+            border: none;
+            padding: 18px 0; /* More vertical padding */
+            width: 100%;
+            max-width: 280px; /* Better mobile width */
+            border-radius: 50px;
+            font-size: 1.1rem; /* Slightly larger text */
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 25px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            min-height: 56px; /* Minimum touch target height */
+            touch-action: manipulation;
+        }
+
+        /* FIXED: Mobile-specific hover/active states */
+        @media (hover: hover) {
+            .login-btn:hover {
+                transform: scale(1.02);
+                box-shadow: 0 5px 15px rgba(255, 65, 51, 0.3);
+            }
+        }
+        
+        .login-btn:active {
+            transform: scale(0.98);
+            box-shadow: 0 2px 8px rgba(255, 65, 51, 0.3);
+        }
+
+        .footer-text {
+            margin-top: 25px;
+            font-size: 0.95rem; /* Slightly larger for mobile */
+            color: #555;
+            line-height: 1.4;
+        }
+
+        .footer-text a {
+            color: #ff7b39;
+            text-decoration: none;
+            font-weight: 700;
+            padding: 4px 0; /* Add some touch padding */
+            display: inline-block; /* Better touch target */
+        }
+        
+        /* FIXED: Keyboard avoidance for iOS */
+        @media (max-height: 600px) {
+            body {
+                align-items: flex-start;
+                padding-top: 20px;
+            }
+            
+            .login-card {
+                margin-top: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-card">
+        <h1>LOGIN</h1>
+        
+        <form id="loginForm">
+            <div class="form-group">
+                <label>EMAIL:</label>
+                <div class="input-wrapper">
+                    <input type="email" placeholder="email@example.com" required autocomplete="email">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>PASSWORD:</label>
+                <div class="input-wrapper">
+                    <input type="password" id="passwordField" required autocomplete="current-password">
+                    <button type="button" class="toggle-password" id="eyeToggle" aria-label="Toggle password visibility">
+                        <svg class="eye-icon eye-open" viewBox="0 0 24 24">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                            <circle cx="12" cy="12" r="3"/>
+                        </svg>
+                        <svg class="eye-icon eye-slash" viewBox="0 0 24 24">
+                            <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 0-4.24 4.24"/>
+                            <path d="M1 1l22 22"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <button type="submit" class="login-btn">LOGIN</button>
+        </form>
+
+        <p class="footer-text">
+            Dont Have An Account? <a href="#" role="button">Sign Up Here</a>
+        </p>
+    </div>
+
+    <script>
+        // FIXED: Prevent zoom on iOS when focusing inputs
+        document.addEventListener('touchstart', function() {}, {passive: true});
+        
+        const passwordField = document.getElementById('passwordField');
+        const eyeToggle = document.getElementById('eyeToggle');
+
+        // Toggle Password Visibility
+        eyeToggle.addEventListener('click', () => {
+            const isPassword = passwordField.type === 'password';
+            
+            // Toggle the type
+            passwordField.type = isPassword ? 'text' : 'password';
+            
+            // Toggle the eye icon state
+            eyeToggle.classList.toggle('password-visible', isPassword);
+            
+            // Prevent focus after toggle (mobile keyboard behavior)
+            eyeToggle.blur();
+        });
+
+        // Better mobile form handling
+        document.getElementById('loginForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const btn = document.querySelector('.login-btn');
+            btn.textContent = "Verifying...";
+            btn.style.opacity = "0.7";
+            btn.disabled = true;
+            
+            // Hide keyboard on submit
+            if (document.activeElement) {
+                document.activeElement.blur();
+            }
+            
+            setTimeout(() => {
+                alert("Login successful!");
+                btn.textContent = "LOGIN";
+                btn.style.opacity = "1";
+                btn.disabled = false;
+            }, 1500);
+        });
+        
+        // FIXED: Better touch handling for all interactive elements
+        document.querySelectorAll('button, input, a').forEach(el => {
+            el.addEventListener('touchstart', function() {
+                this.classList.add('touch-active');
+            });
+            
+            el.addEventListener('touchend', function() {
+                this.classList.remove('touch-active');
+            });
+        });
+    </script>
+</body>
+</html>

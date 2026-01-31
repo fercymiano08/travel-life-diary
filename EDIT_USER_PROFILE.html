@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Identity - Travel Life Diary</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #ff3b2f 0%, #ff954d 100%);
+            --input-bg: #d9d9d9;
+            --text-orange: #ff5e3a;
+            --light-orange: #ffe8e0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        body {
+            height: 100vh;
+            background: var(--primary-gradient);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow: hidden; 
+        }
+
+        /* Main Scrolling Card - 850px Format */
+        .edit-card {
+            background: white;
+            width: 100%;
+            max-width: 850px;
+            max-height: 95vh;
+            border-radius: 60px;
+            padding: 40px 60px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            overflow-y: auto;
+        }
+
+        /* Custom Scrollbar */
+        .edit-card::-webkit-scrollbar { width: 8px; }
+        .edit-card::-webkit-scrollbar-thumb { background: #ff954d; border-radius: 10px; }
+
+        h1 {
+            color: var(--text-orange);
+            text-align: center;
+            font-size: 2.2rem;
+            font-weight: 500;
+            margin-bottom: 30px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        /* Avatar Edit Section */
+        .avatar-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+        .avatar-wrapper {
+            position: relative;
+            width: 130px;
+            height: 130px;
+            background: #eee;
+            border-radius: 50%;
+            border: 4px solid var(--text-orange);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .avatar-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        /* Thin Plus Button - Visible because image is already there in Edit Mode */
+        .upload-plus-btn {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            background: var(--primary-gradient);
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            display: flex; 
+            justify-content: center;
+            align-items: center;
+            color: white;
+            cursor: pointer;
+            border: 2px solid white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        .upload-plus-btn i {
+            stroke-width: 1.5px;
+        }
+
+        /* Form Grid - 220px Labels */
+        .form-container {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            width: 100%;
+            max-width: 650px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            display: grid;
+            grid-template-columns: 220px 1fr;
+            align-items: center;
+        }
+
+        label {
+            text-align: right;
+            padding-right: 25px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: #555;
+            text-transform: uppercase;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            height: 42px;
+            background-color: var(--input-bg);
+            border: none;
+            border-radius: 4px;
+            padding: 0 15px;
+            font-size: 1rem;
+            outline: none;
+            color: #333;
+        }
+
+        textarea {
+            height: 100px;
+            padding: 12px 15px;
+            resize: none;
+        }
+
+        .username-input {
+            display: flex;
+            align-items: center;
+            background: var(--input-bg);
+            border-radius: 4px;
+            padding-left: 15px;
+        }
+
+        .username-input span {
+            color: var(--text-orange);
+            font-weight: 700;
+            margin-right: 5px;
+        }
+
+        .password-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .eye-icon {
+            position: absolute;
+            right: -45px;
+            cursor: pointer;
+            color: #666;
+        }
+
+        /* Buttons */
+        .button-group {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 50px;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            width: 220px;
+            padding: 14px;
+            border: none;
+            border-radius: 50px;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            text-transform: uppercase;
+            background: var(--primary-gradient);
+            transition: transform 0.2s;
+        }
+
+        .btn-grey {
+            background: #eee;
+            color: #444;
+        }
+
+        .btn:hover { transform: translateY(-2px); opacity: 0.9; }
+
+        @media (max-width: 768px) {
+            .form-group { grid-template-columns: 1fr; gap: 5px; }
+            label { text-align: left; }
+            .eye-icon { right: 10px; }
+            .edit-card { padding: 30px 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="edit-card">
+        <h1>Edit Identity</h1>
+        
+        <form id="editForm" class="form-container">
+            
+            <div class="avatar-section">
+                <div class="avatar-wrapper" onclick="document.getElementById('avatarUpload').click()">
+                    <img id="preview" src="https://api.dicebear.com/7.x/avataaars/svg?seed=Juan" alt="Avatar">
+                    
+                    <label for="avatarUpload" class="upload-plus-btn">
+                        <i data-lucide="plus" size="20"></i>
+                    </label>
+                    <input type="file" id="avatarUpload" accept="image/*" style="display:none">
+                </div>
+                <p style="font-size: 0.75rem; color: var(--text-orange); margin-top: 10px; font-weight: bold; letter-spacing: 1px;">CHANGE PHOTO</p>
+            </div>
+
+            <div class="form-group">
+                <label>Handle:</label>
+                <div class="username-input">
+                    <span>@</span>
+                    <input type="text" value="juan_travels24" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>First Name:</label>
+                <input type="text" value="Juan" required>
+            </div>
+
+            <div class="form-group">
+                <label>Last Name:</label>
+                <input type="text" value="Dela Cruz" required>
+            </div>
+
+            <div class="form-group">
+                <label>Travel Bio:</label>
+                <textarea>Exploring the 7,107 islands of the Philippines, one sunset at a time.</textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Traveler Type:</label>
+                <select>
+                    <option value="backpacker" selected>Solo Backpacker</option>
+                    <option value="luxury">Luxury Seeker</option>
+                    <option value="foodie">Culinary / Foodie</option>
+                    <option value="adventure">Adventure / Hiker</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Email Address:</label>
+                <input type="email" value="juan.dc@email.ph" required>
+            </div>
+
+            <div class="form-group">
+                <label>New Password:</label>
+                <div class="password-wrapper">
+                    <input type="password" id="newPass" placeholder="Leave blank to keep current">
+                    <span class="eye-icon" onclick="togglePass('newPass', this)">
+                        <i data-lucide="eye"></i>
+                    </span>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button type="button" class="btn btn-grey" onclick="location.href='USER_PROFILE.html'">Cancel</button>
+                <button type="submit" class="btn">Save Changes</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        // Avatar Update Preview
+        document.getElementById('avatarUpload').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function() {
+                    document.getElementById('preview').src = reader.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        function togglePass(inputId, iconElement) {
+            const input = document.getElementById(inputId);
+            const icon = iconElement.querySelector('i');
+            if (input.type === "password") {
+                input.type = "text";
+                icon.setAttribute('data-lucide', 'eye-off');
+            } else {
+                input.type = "password";
+                icon.setAttribute('data-lucide', 'eye');
+            }
+            lucide.createIcons();
+        }
+
+        document.getElementById('editForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert("IDENTITY UPDATED SUCCESSFULLY!");
+            location.href = 'USER_PROFILE.html';
+        });
+    </script>
+</body>
+</html>

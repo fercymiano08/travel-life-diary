@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Journal - Travel Life Diary</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,100..1000;1,100..1000&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #ff3b2f 0%, #ff954d 100%);
+            --text-orange: #ff6b3d;
+            --input-bg: #eeeeee;
+            --light-orange: #ffe8e0;
+            --red: #ff3b2f;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'DM Sans', sans-serif; }
+
+        body {
+            background: var(--primary-gradient);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .edit-container {
+            background-color: white;
+            width: 100%;
+            max-width: 600px;
+            border-radius: 40px;
+            padding: 30px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        /* HEADER */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: var(--text-orange);
+            font-size: 22px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* MODULE SECTIONS (Same as Edit Profile) */
+        .module-section {
+            border: 2px solid #f2f2f2;
+            border-radius: 25px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .module-label {
+            font-size: 11px;
+            font-weight: 900;
+            color: #bbb;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* INPUTS */
+        label {
+            display: block;
+            font-size: 11px;
+            font-weight: 800;
+            color: #888;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 12px 15px;
+            background: var(--input-bg);
+            border: 2px solid transparent;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            outline: none;
+            margin-bottom: 15px;
+        }
+
+        input:focus, textarea:focus { border-color: var(--text-orange); background: white; }
+
+        /* MOOD & WEATHER SELECTORS */
+        .selector-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .select-item {
+            background: #f5f5f5;
+            padding: 10px;
+            border-radius: 12px;
+            text-align: center;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: 0.2s;
+        }
+
+        .select-item.active {
+            border-color: var(--text-orange);
+            background: var(--light-orange);
+        }
+
+        .select-emoji { font-size: 18px; display: block; }
+        .select-text { font-size: 9px; font-weight: 800; color: #666; text-transform: uppercase; }
+
+        /* BUTTONS */
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        .btn-caps {
+            flex: 1;
+            padding: 16px;
+            border: none;
+            border-radius: 50px;
+            font-weight: 800;
+            font-size: 13px;
+            cursor: pointer;
+            text-transform: uppercase;
+            box-shadow: 0 4px 0 rgba(0,0,0,0.1);
+        }
+
+        .btn-save { background: var(--primary-gradient); color: white; }
+        .btn-cancel { background: #eee; color: #666; box-shadow: 0 4px 0 #ddd; }
+        
+        .btn-delete {
+            background: transparent;
+            color: var(--red);
+            font-size: 11px;
+            margin-top: 20px;
+            width: 100%;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="edit-container">
+        <div class="header">
+            <h1>Edit Journal</h1>
+            <i data-lucide="book-open" color="#ff6b3d"></i>
+        </div>
+
+        <div class="module-section">
+            <div class="module-label"><i data-lucide="map-pin" size="14"></i> Trip Details</div>
+            
+            <label>Location / Title</label>
+            <input type="text" value="Sunset at White Beach, Boracay">
+            
+            <label>Date of Visit</label>
+            <input type="date" value="2024-03-15">
+        </div>
+
+        <div class="module-section">
+            <div class="module-label"><i data-lucide="cloud-sun" size="14"></i> Atmosphere</div>
+            
+            <label>Mood</label>
+            <div class="selector-row">
+                <div class="select-item active"><span class="select-emoji">😊</span><span class="select-text">Happy</span></div>
+                <div class="select-item"><span class="select-emoji">🤩</span><span class="select-text">Excited</span></div>
+                <div class="select-item"><span class="select-emoji">😴</span><span class="select-text">Tired</span></div>
+                <div class="select-item"><span class="select-emoji">😌</span><span class="select-text">Calm</span></div>
+            </div>
+
+            <label>Weather</label>
+            <div class="selector-row">
+                <div class="select-item active"><span class="select-emoji">☀️</span><span class="select-text">Sunny</span></div>
+                <div class="select-item"><span class="select-emoji">☁️</span><span class="select-text">Cloudy</span></div>
+                <div class="select-item"><span class="select-emoji">🌧️</span><span class="select-text">Rainy</span></div>
+                <div class="select-item"><span class="select-emoji">🌬️</span><span class="select-text">Windy</span></div>
+            </div>
+        </div>
+
+        <div class="module-section">
+            <div class="module-label"><i data-lucide="align-left" size="14"></i> Your Story</div>
+            <textarea rows="5">The sand was so fine and the water was crystal clear. We spent the whole afternoon swimming and waiting for the famous Boracay sunset. It didn't disappoint!</textarea>
+            
+            <label>Tags (Comma separated)</label>
+            <input type="text" value="Beach, Sunset, Boracay, Swimming">
+        </div>
+
+        <div class="btn-group">
+            <button class="btn-caps btn-cancel" onclick="history.back()">CANCEL</button>
+            <button class="btn-caps btn-save" onclick="saveEntry()">SAVE CHANGES</button>
+        </div>
+
+        <button class="btn-caps btn-delete" onclick="deleteEntry()">DELETE THIS JOURNAL ENTRY</button>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        // Simple toggle for Mood/Weather items
+        document.querySelectorAll('.select-item').forEach(item => {
+            item.addEventListener('click', function() {
+                const parent = this.parentElement;
+                parent.querySelectorAll('.select-item').forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        function saveEntry() {
+            alert("JOURNAL UPDATED SUCCESSFULLY!");
+            window.location.href = 'TRAVEL_DIARY_JOURNAL.html';
+        }
+
+        function deleteEntry() {
+            if(confirm("Permanently delete this journal?")) {
+                alert("ENTRY REMOVED");
+                window.location.href = 'TRAVEL_DIARY_JOURNAL.html';
+            }
+        }
+    </script>
+</body>
+</html>
